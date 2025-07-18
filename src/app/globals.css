@@ -40,3 +40,15 @@ a {
     color-scheme: dark;
   }
 }
+
+.maplibregl-canvas {
+  cursor: default !important;
+}
+
+.maplibregl-ctrl-bottom-right {
+  display: none;
+}
+
+.maplibregl-control-container {
+  display: none;
+}
