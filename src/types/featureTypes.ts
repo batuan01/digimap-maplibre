@@ -1,4 +1,13 @@
-import type { Feature, Geometry } from "geojson";
+import type {
+  Feature,
+  FeatureCollection,
+  Geometry,
+  LineString,
+  MultiLineString,
+  MultiPoint,
+  Point,
+  Polygon,
+} from "geojson";
 
 type ImageGeometry = {
   type: "Image";
@@ -58,7 +67,24 @@ export interface FeatureProperties {
 //   properties: FeatureProperties;
 // };
 
-export interface FeatureType extends Feature<Geometry> {}
+type AllowedGeometry =
+  | Point
+  | MultiPoint
+  | LineString
+  | MultiLineString
+  | Polygon;
+export interface FeatureType extends Feature<AllowedGeometry> {}
+
+// export interface FeatureType extends Feature<Geometry> {}
+
+export interface FeatureCollectionType {
+  type: "FeatureCollection";
+  features: FeatureType[];
+}
+
+export interface GroupFeatureType extends FeatureCollectionType {
+  sourceType: string;
+}
 
 // Một điểm: [kinh độ, vĩ độ]
 export type LonLat = [number, number];

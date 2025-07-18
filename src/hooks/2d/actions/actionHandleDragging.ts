@@ -4,15 +4,17 @@ import { LayerActions } from "./actionLayer";
 import { ActionSetData } from "./actionSetData";
 import { ActionLoadImage } from "./actionLoadImage";
 import { isImageElement } from "../element/typeChecks";
+import { FeatureType } from "@/types/featureTypes";
+import { Position } from "geojson";
+import { Map, MapGeoJSONFeature } from "maplibre-gl";
 
 export class ActionHandleDragging {
-  static getCornerHandles(feature) {
+  static getCornerHandles(feature: FeatureType): FeatureType[] {
     if (!feature?.geometry) return [];
 
-    const { type, coordinates } = feature.geometry;
-
-    switch (type) {
+    switch (feature.properties?.type) {
       case "Polygon": {
+        const coordinates = feature.geometry.coordinates as Position[][];
         const points = coordinates[0].slice(0, -1); // bỏ điểm đóng vòng
         return points.map((coord, idx) => ({
           type: "Feature",
@@ -23,14 +25,32 @@ export class ActionHandleDragging {
       }
 
       case "Image": {
-        let points = [...coordinates];
+        const coordinates = feature.geometry.coordinates as any;
+
+        let firstCoords: Position[] | Position | null = null;
+
+        if (
+          Array.isArray(coordinates) &&
+          Array.isArray(coordinates[0]) &&
+          Array.isArray(coordinates[0][0])
+        ) {
+          // Kiểu Position[][] → lấy phần tử đầu tiên
+          firstCoords = coordinates[0] as Position[];
+        } else {
+          // Kiểu Position[] → dùng trực tiếp
+          firstCoords = coordinates as Position[];
+        }
+
+        let points = [...firstCoords];
+        const lastPoint = points.at(-1);
         if (
           points.length &&
-          (points[0][0] !== points.at(-1)[0] ||
-            points[0][1] !== points.at(-1)[1])
+          lastPoint &&
+          (points[0][0] !== lastPoint[0] || points[0][1] !== lastPoint[1])
         ) {
           points.push(points[0]);
         }
+
         return points.slice(0, -1).map((coord, idx) => ({
           type: "Feature",
           id: `${feature.id}-handle-${idx}`,
@@ -40,6 +60,7 @@ export class ActionHandleDragging {
       }
 
       case "LineString": {
+        const coordinates = feature.geometry.coordinates as Position[];
         const points = coordinates;
         return points.map((coord, idx) => ({
           type: "Feature",
@@ -50,6 +71,7 @@ export class ActionHandleDragging {
       }
 
       case "MultiLineString": {
+        const coordinates = feature.geometry.coordinates as Position[][];
         return coordinates.flatMap((line, lineIndex) =>
           line.map((coord, pointIndex) => ({
             type: "Feature",
@@ -64,17 +86,8 @@ export class ActionHandleDragging {
         );
       }
 
-      case "MultiPolygon": {
-        const points = coordinates.flatMap((poly) => poly[0].slice(0, -1));
-        return points.map((coord, idx) => ({
-          type: "Feature",
-          id: `${feature.id}-handle-${idx}`,
-          geometry: { type: "Point", coordinates: coord },
-          properties: { type: "handle", parentId: feature.id, index: idx },
-        }));
-      }
-
       case "Point": {
+        const coordinates = feature.geometry.coordinates as Position;
         return [
           {
             type: "Feature",
@@ -90,12 +103,15 @@ export class ActionHandleDragging {
     }
   }
 
-  static enableHandleDragging(map, onUpdateFeature) {
-    let selectedHandle = null;
+  static enableHandleDragging(
+    map: Map,
+    onUpdateFeature: (data: FeatureType) => void
+  ) {
+    let selectedHandle: MapGeoJSONFeature | null = null;
     let isDragging = false;
-    let animationFrameId = null;
-    let latestCoord = null;
-    let currentFeature = null;
+    let animationFrameId: number | null = null;
+    let latestCoord: Position | null = null;
+    let currentFeature: FeatureType | null = null;
 
     map.on("mousedown", (e) => {
       if (!map.getLayer("handles-layer")) return;
@@ -110,7 +126,7 @@ export class ActionHandleDragging {
         isDragging = true;
         map.getCanvas().style.cursor = "grabbing";
 
-       ActionBoundingBox.clearBoundingBox({ map, layerType: "selected" });
+        ActionBoundingBox.clearBoundingBox(map, "selected");
       }
     });
 
@@ -122,8 +138,11 @@ export class ActionHandleDragging {
       const targetFeature = allFeatures.find((f) => f.id === parentId);
       if (!targetFeature) return;
 
+      const geometryType = targetFeature.geometry.type;
+
       switch (targetFeature.properties?.type) {
         case "Polygon": {
+          if (geometryType !== "Polygon") return;
           const coords = [...targetFeature.geometry.coordinates[0]];
           coords[index] = latestCoord;
           coords[coords.length - 1] = coords[0]; // đóng vòng
@@ -132,13 +151,17 @@ export class ActionHandleDragging {
         }
 
         case "Image": {
-          const coords = [...targetFeature.geometry.coordinates];
+          // const coords = [
+          //   ...(targetFeature.geometry.coordinates as Position[]),
+          // ];
+          const coords = [...targetFeature.geometry.coordinates] as any;
           coords[index] = latestCoord;
           targetFeature.geometry.coordinates = coords;
           break;
         }
 
         case "LineString": {
+          if (geometryType !== "LineString") return;
           const coords = [...targetFeature.geometry.coordinates];
           coords[index] = latestCoord;
           targetFeature.geometry.coordinates = coords;
@@ -146,6 +169,7 @@ export class ActionHandleDragging {
         }
 
         case "MultiLineString": {
+          if (geometryType !== "MultiLineString") return;
           const indexRaw = selectedHandle.properties.index;
           let index = JSON.parse(indexRaw);
 
@@ -226,15 +250,11 @@ export class ActionHandleDragging {
 
       update();
       AppGlobals.setDataToStore(currentFeature); // ✅ lưu polygon mới nhất()
-      ActionBoundingBox.drawBoundingBox({
-        feature,
-        map,
-        layerType: "selected",
-      });
+      ActionBoundingBox.drawBoundingBox(feature, map, "selected");
     });
   }
 
-  static addHandlesPoint = (map, handles) => {
+  static addHandlesPoint = (map: Map, handles: FeatureType[]) => {
     if (!map.getSource("handles-source")) {
       map.addSource("handles-source", {
         type: "geojson",
@@ -260,22 +280,23 @@ export class ActionHandleDragging {
     }
   };
 
-  static newHandlesPoint = (map, feature) => {
+  static newHandlesPoint = (map: Map, feature: FeatureType) => {
     if (!feature || !feature.id) return;
 
     const handles = this.getCornerHandles(feature);
+    if (!handles.length) return;
     this.removeHandlesPoint(map);
     this.addHandlesPoint(map, handles);
   };
 
-  static removeHandlesPoint = (map) => {
+  static removeHandlesPoint = (map: Map) => {
     const sourceId = "handles-source";
     const layerId = "handles-layer";
 
     LayerActions.remove(map, sourceId, layerId);
   };
 
-  static dragHandlesPoint = (map) => {
+  static dragHandlesPoint = (map: Map) => {
     this.enableHandleDragging(map, (updatedFeature) => {
       const sourceId = LayerActions.findFeatureSourceId(map, updatedFeature);
       // Cập nhật lại feature trong localStorage

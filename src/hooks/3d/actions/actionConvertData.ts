@@ -1,4 +1,5 @@
 import { ZOOM_OVERVIEW } from "@/constants/mapConfig";
+import { getCoordinates } from "@/hooks/2d/element/getDataElement";
 import {
   isImageElement,
   isPolygonElement,
@@ -24,12 +25,12 @@ export class ActionConvertData {
 
   static dataOverview(data: FeatureType[]) {
     if (!data.length) return [];
-    return data.filter((f) => f.properties.layer === "overview");
+    return data.filter((f) => f.properties?.layer === "overview");
   }
 
   static dataDetail(data: FeatureType[]) {
     if (!data.length) return [];
-    return data.filter((f) => f.properties.layer !== "overview");
+    return data.filter((f) => f.properties?.layer !== "overview");
   }
 
   static filterPolygonElements(data: FeatureType[]) {
@@ -43,11 +44,11 @@ export class ActionConvertData {
     return data.filter((f) => isImageElement(f));
   }
 
-  static convertLabel(polygonFeatures: FeatureType[]): Feature<Point>[] {
+  static convertLabel(polygonFeatures: FeatureType[]) {
     if (!polygonFeatures.length) return [];
 
     return polygonFeatures.map((poly) => {
-      const center = turf.centroid(poly as turf.AllGeoJSON);
+      const center = turf.centroid(poly);
       return {
         ...poly,
         geometry: center.geometry,
@@ -56,7 +57,7 @@ export class ActionConvertData {
   }
 
   static convertMultiLineToLine(pathElement: FeatureType) {
-    const lineStrings = pathElement.geometry.coordinates.map((line) => ({
+    const lineStrings = getCoordinates(pathElement.geometry)?.map((line) => ({
       type: "Feature",
       geometry: {
         type: "LineString",

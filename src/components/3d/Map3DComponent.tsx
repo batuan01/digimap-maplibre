@@ -16,6 +16,8 @@ import { ActionLoadData3D } from "@/hooks/3d/actions/actionLoadData3D";
 import { ZOOM_OVERVIEW } from "@/constants/mapConfig";
 import { PropertiesComponent } from "./left-panel/PropertiesComponent";
 import CustomToolbar from "../bottom-panel/CustomToolbar";
+import { FeatureCollection } from "geojson";
+import { FeatureCollectionType } from "@/types/featureTypes";
 
 // const booths = require("../data/booths.geojson");
 
@@ -25,7 +27,7 @@ const MapLibre3D = () => {
   const mapRef = useRef<Map | null>(null);
   const { selectedElement, setSelectedElement } = useMapContext();
 
-  const storedData = loadFromLocalStorage()!;
+  const storedData = loadFromLocalStorage()! as FeatureCollectionType;
   // const storedData = booths;
 
   const polygonFeatures = ActionConvertData.filterPolygonElements(

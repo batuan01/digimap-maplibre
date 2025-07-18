@@ -1,5 +1,4 @@
 import * as turf from "@turf/turf";
-import { handleMoveElement } from "./actionDragElement";
 import { isImageElement, isPolygonElement } from "../element/typeChecks";
 import { ActionLoadImage } from "./actionLoadImage";
 import { AppGlobals } from "@/lib/appGlobals";
@@ -9,9 +8,13 @@ import { ActionRotateElement } from "./actionRotateElement";
 import { ActionRemovePoint } from "./actionRemovePoint";
 import { LayerActions } from "./actionLayer";
 import { ActionSetData } from "./actionSetData";
+import { ActionDragElement } from "./actionDragElement";
+import { Map } from "maplibre-gl";
+import { FeatureType } from "@/types/featureTypes";
+import { Position } from "geojson";
 
 export class ActionSelectedElement2D {
-  static findFeatureAtPoint(point, features) {
+  static findFeatureAtPoint(point: Position, features) {
     const clickedPoint = turf.point(point);
 
     return [...features]
@@ -67,7 +70,15 @@ export class ActionSelectedElement2D {
       });
   }
 
-  static getSelectedElement({ map, setSelectedElement }) {
+  static getSelectedElement({
+    map,
+    setSelectedElement,
+  }: {
+    map: Map;
+    setSelectedElement: React.Dispatch<
+      React.SetStateAction<FeatureType | null>
+    >;
+  }) {
     map.on("click", (e) => {
       const clickedLngLat = [e.lngLat.lng, e.lngLat.lat];
       const storedData = AppGlobals.getElements();
@@ -80,7 +91,7 @@ export class ActionSelectedElement2D {
         map.dragPan.disable();
       } else {
         setSelectedElement(null);
-        ActionBoundingBox.clearBoundingBox({ map, layerType: "selected" });
+        ActionBoundingBox.clearBoundingBox(map, "selected");
         ActionHandleDragging.removeHandlesPoint(map);
         ActionRotateElement.destroy(map);
         map.dragPan.enable();
@@ -100,7 +111,15 @@ export class ActionSelectedElement2D {
     });
   }
 
-  static getDoubleClickSelection({ map, setSelectedElement }) {
+  static getDoubleClickSelection({
+    map,
+    setSelectedElement,
+  }: {
+    map: Map;
+    setSelectedElement: React.Dispatch<
+      React.SetStateAction<FeatureType | null>
+    >;
+  }) {
     map.on("dblclick", (e) => {
       e.preventDefault();
       map.dragPan.disable();
@@ -152,19 +171,15 @@ export class ActionSelectedElement2D {
             ActionSetData.setSelectedData(map, rotated, sourceId); // cập nhật lại vào source
           });
         } else {
-          ActionBoundingBox.clearBoundingBox({ map, layerType: "selected" });
-          ActionBoundingBox.clearBoundingBox({ map, layerType: "hover" });
+          ActionBoundingBox.clearBoundingBox(map, "selected");
+          ActionBoundingBox.clearBoundingBox(map, "hover");
           ActionRotateElement.destroy(map);
         }
-        ActionBoundingBox.drawBoundingBox({
-          feature: targetPolygon,
-          map,
-          layerType: "selected",
-        });
+        ActionBoundingBox.drawBoundingBox(targetPolygon, map, "selected");
         ActionHandleDragging.newHandlesPoint(map, targetPolygon);
 
         requestAnimationFrame(() => {
-          handleMoveElement({ map, feature, sourceId });
+          ActionDragElement.handleMoveElement({ map, feature, sourceId });
         });
 
         ActionHandleDragging.dragHandlesPoint(map);

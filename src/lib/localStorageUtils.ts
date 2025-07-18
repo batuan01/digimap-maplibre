@@ -53,6 +53,8 @@ export const loadFromLocalStorage = (): {
   type: string;
   features: FeatureType[];
 } | null => {
+  if (typeof window === "undefined") return null;
+
   const geojson = localStorage.getItem(LOCAL_STORAGE_KEY);
   return geojson ? JSON.parse(geojson) : null;
 };

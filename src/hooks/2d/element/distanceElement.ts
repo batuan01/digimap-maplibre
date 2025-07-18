@@ -1,17 +1,18 @@
 import { FeatureType, LonLat, Path } from "@/types/featureTypes";
 import * as turf from "@turf/turf";
 import { Position } from "geojson";
+import { getCoordinates } from "./getDataElement";
 
-interface PointNearAnySegment {
-  point: LonLat;
-  segment: Path;
+export interface PointNearAnySegment {
+  point: Position | null;
+  segment: Position[] | null;
 }
 
 export class DistanceElement {
   /**
    * Tính khoảng cách Euclidean giữa 2 điểm
    */
-  static getDistance(p1: LonLat, p2: LonLat) {
+  static getDistance(p1: Position, p2: Position) {
     const dx = p1[0] - p2[0];
     const dy = p1[1] - p2[1];
     return Math.sqrt(dx * dx + dy * dy);
@@ -20,7 +21,7 @@ export class DistanceElement {
   /**
    * Trả về điểm gần nhất trên đoạn thẳng AB tới điểm P
    */
-  static getClosestPointOnSegment(p: LonLat, a: LonLat, b: LonLat): LonLat {
+  static getClosestPointOnSegment(p: Position, a: Position, b: Position) {
     const [x, y] = p;
     const [x1, y1] = a;
     const [x2, y2] = b;
@@ -43,15 +44,11 @@ export class DistanceElement {
    * @param {number} tolerance - ngưỡng khoảng cách
    * @returns {boolean}
    */
-  static isPointNearAnySegment({
-    point,
-    lines,
-    distance,
-  }: {
-    point: LonLat;
-    lines: Path[];
-    distance: number;
-  }): PointNearAnySegment | null {
+  static isPointNearAnySegment(
+    point: Position,
+    lines: Position[][],
+    tolerance: number
+  ): PointNearAnySegment | null {
     let closestPoint = null;
     let minDistance = Infinity;
     let matchedSegment = null;
@@ -72,10 +69,10 @@ export class DistanceElement {
     }
 
     // Chỉ trả về nếu gần trong khoảng tolerance
-    if (minDistance <= distance) {
+    if (minDistance <= tolerance) {
       return {
-        point: closestPoint as LonLat,
-        segment: matchedSegment as Path,
+        point: closestPoint,
+        segment: matchedSegment,
       };
     }
 
@@ -86,17 +83,21 @@ export class DistanceElement {
     polygonFeature: FeatureType,
     pathFeature: FeatureType
   ) {
-    const polygon = turf.polygon(
-      polygonFeature.geometry.coordinates as Position[][]
-    );
-    const geometry = pathFeature.geometry;
+    const coordinatesPolygon = getCoordinates(polygonFeature.geometry);
+    const coordinatesPath = getCoordinates(
+      pathFeature.geometry
+    ) as Position[][];
 
-    for (let i = 0; i < geometry.coordinates.length; i++) {
-      const line = geometry.coordinates[i];
+    if (!coordinatesPolygon || !coordinatesPath) return null;
+
+    const polygon = turf.polygon(coordinatesPolygon as Position[][]);
+
+    for (let i = 0; i < coordinatesPath.length; i++) {
+      const line = coordinatesPath[i];
 
       for (let j = 0; j < line.length; j++) {
         const coord = line[j];
-        const pt = turf.point(coord as Position);
+        const pt = turf.point(coord);
 
         if (turf.booleanPointInPolygon(pt, polygon)) {
           return coord;

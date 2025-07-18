@@ -4,6 +4,9 @@ import { AppGlobals } from "@/lib/appGlobals";
 import { ActionSelectedElement2D } from "./actionSelectedElement2D";
 import { Map } from "maplibre-gl";
 import { ActionLoadImage } from "./actionLoadImage";
+import { FeatureCollectionType, FeatureType } from "@/types/featureTypes";
+import { getSourceElement } from "../element/getDataElement";
+import { FeatureCollection } from "geojson";
 
 interface Props {
   map: Map;
@@ -12,7 +15,11 @@ interface Props {
 }
 
 export class ActionBoundingBox {
-  static drawBoundingBox = ({ feature, map, layerType = "hover" }: Props) => {
+  static drawBoundingBox = (
+    feature: FeatureType,
+    map: Map,
+    layerType: string = "hover"
+  ) => {
     if (!map || !feature) return;
     if (isPathElement(feature)) return;
 
@@ -48,7 +55,7 @@ export class ActionBoundingBox {
       });
     }
 
-    const source = map.getSource(sourceId) as maplibregl.GeoJSONSource;
+    const source = getSourceElement(map, sourceId);
     if (source) {
       source.setData({
         type: "FeatureCollection",
@@ -57,18 +64,15 @@ export class ActionBoundingBox {
     }
   };
 
-  static hoverBBoxSelected = ({
-    selectedElement,
-    map,
-  }: {
-    selectedElement: any;
-    map: Map | null;
-  }) => {
+  static hoverBBoxSelected = (
+    map: Map,
+    selectedElement?: FeatureType | null
+  ) => {
     if (!map) return;
 
     map.on("mousemove", (e) => {
       if (selectedElement || AppGlobals.getElements()?.length === 0) {
-        this.clearBoundingBox({ map, layerType: "hover" });
+        this.clearBoundingBox(map, "hover");
         return;
       }
 
@@ -87,27 +91,16 @@ export class ActionBoundingBox {
         const polygonFeature = isImageElement(hoveredPolygon)
           ? ActionLoadImage.convertPoligon(hoveredPolygon)
           : hoveredPolygon;
-        this.drawBoundingBox({
-          feature: polygonFeature,
-          map,
-          layerType: "hover",
-        });
+        this.drawBoundingBox(polygonFeature, map, "hover");
       } else {
-        this.clearBoundingBox({ map, layerType: "hover" });
+        this.clearBoundingBox(map, "hover");
       }
     });
   };
 
-  static clearBoundingBox = ({
-    map,
-    layerType = "hover",
-  }: {
-    map: Map | null;
-    layerType: string;
-  }) => {
-    if (!map) return;
+  static clearBoundingBox = (map: Map, layerType: string = "hover") => {
     const sourceId = `bbox-${layerType}`;
-    const source = map.getSource(sourceId) as maplibregl.GeoJSONSource;
+    const source = getSourceElement(map, sourceId);
 
     if (source) {
       source.setData({
@@ -117,7 +110,26 @@ export class ActionBoundingBox {
     }
   };
 
-  static getMinimumRotatedBBox = (feature: any) => {
+  static updateBoundingBoxes(map: Map, movedFeature: FeatureType) {
+    const rotatedBBox = this.getMinimumRotatedBBox(movedFeature);
+    if (!rotatedBBox) return;
+
+    rotatedBBox.properties = { type: "bbox" };
+
+    const featureCollection = {
+      type: "FeatureCollection",
+      features: [rotatedBBox],
+    } as FeatureCollectionType;
+
+    ["bbox-selected", "bbox-hover"].forEach((sourceId) => {
+      const source = getSourceElement(map, sourceId);
+      if (source && "setData" in source) {
+        source.setData(featureCollection);
+      }
+    });
+  }
+
+  static getMinimumRotatedBBox = (feature: FeatureType) => {
     const convexHull = turf.convex(feature);
     if (!convexHull) return null;
 

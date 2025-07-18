@@ -114,7 +114,7 @@ export class ActionRotateElement {
 
     this.map.on("mousemove", this.onMouseMove);
     this.map.once("mouseup", this.onMouseUp);
-    ActionBoundingBox.clearBoundingBox({ map: this.map, layerType: "selected" });
+    ActionBoundingBox.clearBoundingBox(this.map, "selected");
     ActionHandleDragging.removeHandlesPoint(this.map);
   };
 

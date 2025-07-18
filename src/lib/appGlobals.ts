@@ -7,11 +7,11 @@ export class AppGlobals {
     return this.elements;
   }
 
-  static setElements(value) {
+  static setElements(value: FeatureType[]) {
     this.elements = value;
   }
 
-  static setDataToStore(data) {
+  static setDataToStore(data: FeatureType) {
     if (!data) return;
 
     const index = this.elements.findIndex((f) => f.id === data.id);
@@ -23,12 +23,11 @@ export class AppGlobals {
     }
   }
 
-  static setAllDataToStore(data) {
-    if (!data) return;
-    this.elements = data;
-  }
-
-  static updateDataStoreByIds(id1, id2) {
+  static updateDataStoreByIds(
+    id1: string | number | undefined,
+    id2: string | number | undefined
+  ) {
+    if (!id1 || !id2) return;
     const features = this.getElements();
     if (!features || !Array.isArray(features)) return;
 
@@ -43,15 +42,17 @@ export class AppGlobals {
     features[index2] = temp;
 
     // Hoán đổi index trong properties
-    const idx1 = features[index1].properties.index;
-    const idx2 = features[index2].properties.index;
-    features[index1].properties.index = idx2;
-    features[index2].properties.index = idx1;
+    const idx1 = features[index1].properties?.index;
+    const idx2 = features[index2].properties?.index;
+    if (features[index1].properties && features[index2].properties) {
+      features[index1].properties.index = idx2;
+      features[index2].properties.index = idx1;
+    }
 
-    this.setAllDataToStore(features);
+    this.setElements(features);
   }
 
-  static removeDataById(id) {
+  static removeDataById(id: string | number | undefined) {
     if (!id) return;
 
     const index = this.elements.findIndex((f) => f.id === id);
@@ -60,7 +61,7 @@ export class AppGlobals {
     }
   }
 
-  static getRelativeId(id, condition = "forward") {
+  static getRelativeId(id: string, condition = "forward") {
     const index = this.elements.findIndex((f) => f.id === id);
     if (index === -1) return null;
 
@@ -73,11 +74,14 @@ export class AppGlobals {
 
   static getMaxIndex() {
     return this.elements.length
-      ? Math.max(...this.elements.map((f) => Number(f.properties.index)))
+      ? Math.max(...this.elements.map((f) => Number(f.properties?.index)))
       : 0;
   }
 
-  static getAdjacentFeature(feature, direction) {
+  static getAdjacentFeature(
+    feature: FeatureType,
+    direction: "forward" | "backward"
+  ): FeatureType | null {
     if (!feature?.properties?.index) return null;
 
     const currentIndex = Number(feature.properties.index);
@@ -91,8 +95,8 @@ export class AppGlobals {
       })
       .sort((a, b) =>
         isForward
-          ? a.properties.index - b.properties.index
-          : b.properties.index - a.properties.index
+          ? a.properties?.index - b.properties?.index
+          : b.properties?.index - a.properties?.index
       );
 
     return candidates[0] || null;

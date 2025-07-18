@@ -1,18 +1,21 @@
-import { Feature, GeoJsonProperties, Geometry, Position } from "geojson";
+import { FeatureType } from "@/types/featureTypes";
+import { Position } from "geojson";
 import { Map } from "maplibre-gl";
 
 export class ActionLoadRoute {
   static add(map: Map, coordinates: Position[]) {
-    const lineFeature = {
+    const lineFeature: FeatureType = {
       type: "Feature",
       geometry: {
         type: "LineString",
         coordinates,
       },
       properties: {},
-    } as Feature<Geometry, GeoJsonProperties>;
+    };
 
-    if (!map.getSource("route")) {
+    const source = map.getSource("route") as maplibregl.GeoJSONSource;
+
+    if (!source) {
       map.addSource("route", {
         type: "geojson",
         data: {
@@ -36,7 +39,7 @@ export class ActionLoadRoute {
       });
     } else {
       // Nếu source đã tồn tại thì chỉ update lại
-      (map.getSource("route") as maplibregl.GeoJSONSource).setData({
+      source.setData({
         type: "FeatureCollection",
         features: [lineFeature],
       });

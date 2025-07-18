@@ -1,11 +1,8 @@
-import { Area } from "@/types/featureTypes";
-import {
-  lineIntersect,
-  lineString
-} from "@turf/turf";
+import { lineIntersect, lineString } from "@turf/turf";
+import { Position } from "geojson";
 
 export class SplitPath {
-  static addCutPoints = (multiPoints: Area) => {
+  static addCutPoints = (multiPoints: Position[][]) => {
     const updatedMultiPoints = [...multiPoints];
 
     for (let i = 0; i < multiPoints.length; i++) {

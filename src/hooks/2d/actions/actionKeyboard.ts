@@ -6,11 +6,19 @@ import { ActionRotateElement } from "./actionRotateElement";
 import { isImageElement } from "../element/typeChecks";
 import { ActionOrderLayer } from "./actionOrderLayer";
 import { removeFeatureFromLocalStorage } from "@/lib/localStorageUtils";
+import { RefObject } from "react";
+import { Map } from "maplibre-gl";
+import { FeatureType } from "@/types/featureTypes";
+import { LayerActions } from "./actionLayer";
 
 export class ActionKeyboard {
-  static selectedMultipleElements = [];
-  static keyDown(mapContainer, mapRef, selectedElement) {
-    const handleKeyDown = (e) => {
+  static selectedMultipleElements: FeatureType[] = [];
+  static keyDown(
+    mapContainer: RefObject<HTMLDivElement | null>,
+    mapRef: RefObject<Map | null>,
+    selectedElement: FeatureType | null
+  ) {
+    const handleKeyDown = (e: KeyboardEvent) => {
       const mapEl = mapContainer.current;
       const activeEl = document.activeElement;
 
@@ -27,6 +35,9 @@ export class ActionKeyboard {
       if (e.key === "Backspace") {
         e.preventDefault();
         const map = mapRef.current;
+
+        if (!map) return;
+
         if (ActionRemovePoint.targetPoint) {
           ActionRemovePoint.removeOnlyPoint(map);
           return;
@@ -34,7 +45,7 @@ export class ActionKeyboard {
 
         if (selectedElement) {
           clearAllFeatures(map, [selectedElement]);
-          AppGlobals.removeDataById(selectedElement.id);
+          AppGlobals.removeDataById(selectedElement.id as string);
         }
 
         if (this.selectedMultipleElements.length) {
@@ -44,8 +55,8 @@ export class ActionKeyboard {
         }
 
         ActionHandleDragging.removeHandlesPoint(map);
-        ActionBoundingBox.clearBoundingBox({ map, layerType: "selected" });
-    ActionBoundingBox.clearBoundingBox({ map, layerType: "hover" });
+        ActionBoundingBox.clearBoundingBox(map, "selected");
+        ActionBoundingBox.clearBoundingBox(map, "hover");
         ActionRotateElement.destroy(map);
       }
     };
@@ -57,18 +68,19 @@ export class ActionKeyboard {
   }
 }
 
-export const clearAllFeatures = (map, features) => {
+export const clearAllFeatures = (map: Map, features: FeatureType[]) => {
   if (!features.length) return;
 
   features.forEach((f) => {
     const currentSourceId = LayerActions.findFeatureSourceId(map, f);
+    if (!currentSourceId) return;
 
     if (!isImageElement(f)) {
       ActionOrderLayer.updateDataAftermove(map, f, currentSourceId);
-      removeFeatureFromLocalStorage(f.id);
+      removeFeatureFromLocalStorage(f.id as string);
     } else {
-      ActionOrderLayer.removeLayer(map, f.id);
-      removeFeatureFromLocalStorage(f.id);
+      ActionOrderLayer.removeLayer(map, f.id as string);
+      removeFeatureFromLocalStorage(f.id as string);
     }
   });
 };

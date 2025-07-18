@@ -3,28 +3,15 @@ import { isImageElement, isPathElement } from "../element/typeChecks";
 import { AppGlobals } from "@/lib/appGlobals";
 import { generateUUID } from "@/constants/mapConfig";
 import { Map } from "maplibre-gl";
-import { FeatureType } from "@/types/featureTypes";
-
-interface AddFeatureProps {
-  features: FeatureType | GroupFeature;
-  map: any;
-  index: string;
-  beforeLayerId?: string;
-}
-
-export interface GroupFeature {
-  type: string;
-  sourceType: string;
-  features: FeatureType[];
-}
+import { FeatureType, GroupFeatureType } from "@/types/featureTypes";
 
 export class ActionLoadData2D {
-  static splitFeatureGroups(features: FeatureType[]): GroupFeature[] {
-    const result = [];
+  static splitFeatureGroups(features: FeatureType[]): GroupFeatureType[] {
+    const result: GroupFeatureType[] = [];
     let current: FeatureType[] = [];
 
     const allFeatures = features.sort(
-      (a, b) => a.properties.index - b.properties.index
+      (a, b) => a.properties?.index - b.properties?.index
     );
 
     for (const f of allFeatures) {
@@ -74,7 +61,7 @@ export class ActionLoadData2D {
     return result;
   }
 
-  static loadDefaultData = (map: Map): void => {
+  static loadDefaultData = (map: Map) => {
     const geojson = loadFromLocalStorage();
     if (!geojson) return;
 
@@ -83,11 +70,11 @@ export class ActionLoadData2D {
 
     splitGeojson.forEach((f) => {
       const index = generateUUID();
-      this.AddFeature({ features: f, map, index });
+      this.AddFeature(f, map, index);
     });
   };
 
-  static LoadColor = (map: Map): void => {
+  static LoadColor = (map: Map) => {
     const applyColorToDrawLayers = () => {
       const layers = map.getStyle().layers;
       layers
@@ -121,12 +108,12 @@ export class ActionLoadData2D {
     });
   };
 
-  static AddFeature = ({
-    features,
-    map,
-    index,
-    beforeLayerId = "",
-  }: AddFeatureProps): void => {
+  static AddFeature = (
+    features: GroupFeatureType,
+    map: Map,
+    index: string,
+    beforeLayerId: string = ""
+  ) => {
     const sourceId = `source-${index}`;
     const layerId = `layer-${index}`;
     const outlineId = `layer-outline-${index}`;
@@ -177,7 +164,7 @@ export class ActionLoadData2D {
     // 👇 TH2: Image (custom)
     if (geometryType === "Image") {
       const feature = features.features[0]; // ảnh chỉ có 1 feature
-      const bounds = feature.geometry.coordinates;
+      const bounds = feature.geometry.coordinates as any;
       const imageUrl = feature.properties?.imageUrl;
       const imageId = feature.id;
 

@@ -1,10 +1,30 @@
-import { Map } from "maplibre-gl";
+import { Map, Point } from "maplibre-gl";
 import { SplitPath } from "../element/splitPath";
 import { AppGlobals } from "@/lib/appGlobals";
 import { ActionSelectedElement2D } from "./actionSelectedElement2D";
 import { LayerActions } from "./actionLayer";
 import { ActionOrderLayer } from "./actionOrderLayer";
-import { removeFeatureFromLocalStorage } from "@/lib/localStorageUtils";
+import {
+  removeFeatureFromLocalStorage,
+  updateFeatureInLocalStorage,
+} from "@/lib/localStorageUtils";
+import { ActionHandleDragging } from "./actionHandleDragging";
+import { ActionSetData } from "./actionSetData";
+import { FeatureType } from "@/types/featureTypes";
+import { isPathElement } from "../element/typeChecks";
+import {
+  getFeaturesBySource,
+  getSourceElement,
+} from "../element/getDataElement";
+import { Position } from "geojson";
+
+interface MenuOption {
+  key: string;
+  label: string;
+  shortcut: string;
+  action: () => void;
+  isDelete?: boolean; // thêm dòng này
+}
 
 export class ActionMenuOption {
   static initRightMouse(map: Map) {
@@ -36,12 +56,12 @@ export class ActionMenuOption {
           }
         },
         () => {
-          if (feature) {
-            this.onSplitPath(map, feature, currentSourceId);
+          if (feature && currentSourceId) {
+            this.onSplitPath(map, currentSourceId);
           }
         },
         () => {
-          if (feature) {
+          if (feature && currentSourceId) {
             ActionOrderLayer.updateDataAftermove(map, feature, currentSourceId);
             removeFeatureFromLocalStorage(feature.id);
             AppGlobals.removeDataById(feature.id);
@@ -52,12 +72,12 @@ export class ActionMenuOption {
   }
 
   static showContextMenu(
-    screenPoint,
-    feature,
-    onUp,
-    onDown,
-    onSplit,
-    onDelete
+    screenPoint: Point,
+    feature: FeatureType,
+    onUp: () => void,
+    onDown: () => void,
+    onSplit: () => void,
+    onDelete: () => void
   ) {
     const existing = document.getElementById("map-context-menu");
     if (existing) existing.remove();
@@ -79,7 +99,7 @@ export class ActionMenuOption {
       boxShadow: "0 2px 10px rgba(0,0,0,0.4)",
     });
 
-    const options = [
+    const options: MenuOption[] = [
       { key: "up", label: "Bring forward", shortcut: "Ctrl+[", action: onUp },
       {
         key: "down",
@@ -144,15 +164,17 @@ export class ActionMenuOption {
     document.body.appendChild(menu);
   }
 
-  static onSplitPath = (map, feature, currentSourceId) => {
+  static onSplitPath = (map: Map, currentSourceId: string) => {
     ActionHandleDragging.removeHandlesPoint(map);
 
-    const sourceFeatures = map.getSource(currentSourceId);
-    const sourceData = sourceFeatures._data || sourceFeatures._options?.data;
-    let currentFeature = sourceData?.features?.[0];
+    const sourceFeatures = getSourceElement(map, currentSourceId);
+    if (!sourceFeatures) return;
+
+    let currentFeature = getFeaturesBySource(sourceFeatures)[0];
+    if (!currentFeature) return;
 
     currentFeature.geometry.coordinates = SplitPath.addCutPoints(
-      currentFeature.geometry.coordinates
+      currentFeature.geometry.coordinates as Position[][]
     );
 
     ActionHandleDragging.newHandlesPoint(map, currentFeature);

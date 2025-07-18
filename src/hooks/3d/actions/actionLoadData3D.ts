@@ -1,14 +1,12 @@
 import { Map } from "maplibre-gl";
 import { ActionConvertData } from "./actionConvertData";
-import { FeatureType } from "@/types/featureTypes";
-import {
-  ActionLoadData2D,
-  GroupFeature,
-} from "@/hooks/2d/actions/actionLoadData2D";
+import { FeatureCollectionType, FeatureType, GroupFeatureType } from "@/types/featureTypes";
+import { ActionLoadData2D } from "@/hooks/2d/actions/actionLoadData2D";
 import { AppGlobals } from "@/lib/appGlobals";
 import { ActionLoadLabel } from "./actionLoadLabel";
 import { ZOOM_OVERVIEW } from "@/constants/mapConfig";
 import { LayerActions } from "@/hooks/2d/actions/actionLayer";
+import { FeatureCollection } from "geojson";
 
 interface FeatureGroup {
   type: string;
@@ -16,7 +14,7 @@ interface FeatureGroup {
 }
 
 export class ActionLoadData3D {
-  static updateElementsByZoom(map: Map, data: FeatureGroup) {
+  static updateElementsByZoom(map: Map, data: FeatureCollectionType) {
     const zoom = map.getZoom();
     const zoomFeatures = ActionConvertData.filerZoomLayers(map, data.features);
 
@@ -33,7 +31,12 @@ export class ActionLoadData3D {
 
     // Thêm các khối chính (polygon hoặc image)
     splitZoom.forEach((group) => {
-      this.AddFeature3D(group, map, group.features[0].id, beforeLayerId);
+      this.AddFeature3D(
+        group,
+        map,
+        group.features[0].id as string,
+        beforeLayerId
+      );
     });
 
     // cap nhật data hien tai
@@ -46,7 +49,7 @@ export class ActionLoadData3D {
     // Cập nhật source label (text/image)
     const labelFeatures = ActionConvertData.convertLabel(
       ActionConvertData.filterPolygonElements(zoomFeatures)
-    ) as FeatureType[];
+    );
     this.updateLabelSource(map, "source-labels-text", labelFeatures);
     this.updateLabelSource(map, "source-labels-image", labelFeatures);
 
@@ -62,10 +65,10 @@ export class ActionLoadData3D {
   }
 
   static AddFeature3D(
-    group: GroupFeature,
+    group: GroupFeatureType,
     map: Map,
     id: string,
-    beforeLayerId = ""
+    beforeLayerId: string = ""
   ) {
     const sourceId = `source-${id}`;
     const layerId = `layer-${id}`;
@@ -78,7 +81,7 @@ export class ActionLoadData3D {
     if (geometryType === "Polygon") {
       map.addSource(sourceId, {
         type: "geojson",
-        data: group as any,
+        data: group,
       });
 
       map.addLayer(
@@ -96,12 +99,7 @@ export class ActionLoadData3D {
         beforeLayerId
       );
     } else if (geometryType === "Image") {
-      ActionLoadData2D.AddFeature({
-        features: group,
-        map,
-        index: id,
-        beforeLayerId,
-      });
+      ActionLoadData2D.AddFeature(group, map, id, beforeLayerId);
     }
   }
 
@@ -114,7 +112,7 @@ export class ActionLoadData3D {
     if (source) {
       source.setData({
         type: "FeatureCollection",
-        features: features as any,
+        features,
       });
     }
   }

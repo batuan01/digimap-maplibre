@@ -1,3 +1,4 @@
+import { FeatureType } from "@/types/featureTypes";
 import { Feature, Point } from "geojson";
 import { Map } from "maplibre-gl";
 
@@ -96,7 +97,7 @@ export class ActionLoadLabel {
     }
   }
 
-  static loadAllImagesLabel = async (map: Map, features: Feature<Point>[]) => {
+  static loadAllImagesLabel = async (map: Map, features: FeatureType[]) => {
     const featuresHasIcon = features.filter((f) => f.properties?.labelImage);
     for (const feature of featuresHasIcon) {
       const id = feature.properties?.id;
@@ -125,7 +126,8 @@ export class ActionLoadLabel {
         canvas.height = canvasHeight;
         const ctx = canvas.getContext("2d");
 
-        if(!ctx) return;
+        if (!ctx) return;
+
         // Bo tròn
         const radius = 10;
         ctx.beginPath();

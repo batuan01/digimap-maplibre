@@ -3,37 +3,43 @@ import { LayerActions } from "./actionLayer";
 import { generateUUID } from "@/constants/mapConfig";
 import { isImageElement } from "../element/typeChecks";
 import { ActionLoadData2D } from "./actionLoadData2D";
+import { Map } from "maplibre-gl";
+import { FeatureType, GroupFeatureType } from "@/types/featureTypes";
+import {
+  getFeaturesBySource,
+  getSourceElement,
+} from "../element/getDataElement";
 
 export class ActionOrderLayer {
-  static bringForward(map, feature) {
+  static bringForward(map: Map, feature: FeatureType) {
     this.moveLayer(map, feature, "forward");
   }
 
-  static sendBackward(map, feature) {
+  static sendBackward(map: Map, feature: FeatureType) {
     this.moveLayer(map, feature, "backward");
   }
 
   static moveFeature(
-    map,
-    feature,
-    fromSourceId,
-    toSourceId,
-    direction,
-    currentLayerId
+    map: Map,
+    feature: FeatureType,
+    fromSourceId: string,
+    toSourceId: string,
+    direction: "forward" | "backward",
+    currentLayerId: string[]
   ) {
-    const fromSource = map.getSource(fromSourceId);
-    const toSource = map.getSource(toSourceId);
+    const fromSource = getSourceElement(map, fromSourceId);
+    const toSource = getSourceElement(map, toSourceId);
 
-    const fromData = fromSource._data || fromSource._options?.data;
-    const toData = toSource._data || toSource._options?.data;
+    const fromFeaturesData = getFeaturesBySource(fromSource);
+    const toFeaturesData = getFeaturesBySource(toSource);
 
-    if (!fromData?.features || !toData?.features) return;
+    if (fromFeaturesData.length === 0 || toFeaturesData.length === 0) return;
 
-    const newFrom = fromData.features.filter((f) => f.id !== feature.id);
+    const newFrom = fromFeaturesData.filter((f) => f.id !== feature.id);
     const newTo =
       direction === "forward"
-        ? [feature, ...toData.features]
-        : [...toData.features, feature];
+        ? [feature, ...toFeaturesData]
+        : [...toFeaturesData, feature];
 
     fromSource.setData({ type: "FeatureCollection", features: newFrom });
     toSource.setData({ type: "FeatureCollection", features: newTo });
@@ -48,7 +54,11 @@ export class ActionOrderLayer {
     }
   }
 
-  static moveLayer = (map, feature, direction) => {
+  static moveLayer = (
+    map: Map,
+    feature: FeatureType,
+    direction: "forward" | "backward"
+  ) => {
     const currentSourceId = LayerActions.findFeatureSourceId(map, feature);
     const currentLayerId = LayerActions.findFeatureLayerId(map, feature);
 
@@ -66,9 +76,8 @@ export class ActionOrderLayer {
       return;
     }
 
-    const source = map.getSource(currentSourceId);
-    const data = source._data || source._options?.data;
-    const features = data?.features || [];
+    const source = getSourceElement(map, currentSourceId);
+    const features = getFeaturesBySource(source);
 
     const index = features.findIndex((f) => f.id === feature.id);
     const delta = direction === "forward" ? 1 : -1;
@@ -111,21 +120,27 @@ export class ActionOrderLayer {
     }
 
     const relativeFeature = AppGlobals.getAdjacentFeature(feature, direction);
+    if (!relativeFeature) return;
     const relativeSourceId = LayerActions.findFeatureSourceId(
       map,
       relativeFeature
     );
-    const newFeature = (feature, index) => {
+    if (!relativeSourceId) return;
+
+    const newFeature = (feature: FeatureType, index: number) => {
       return {
         ...feature,
         properties: {
           ...feature.properties,
-          index: index ? index : feature.properties.index,
+          index: index ? index : feature.properties?.index,
         },
       };
     };
 
-    const newFeatureCollection = (feature, index) => {
+    const newFeatureCollection = (
+      feature: FeatureType,
+      index: number
+    ): GroupFeatureType => {
       return {
         type: "FeatureCollection",
         sourceType: feature.geometry.type,
@@ -141,7 +156,9 @@ export class ActionOrderLayer {
         relativeFeature,
         direction
       );
+      if (!aboveFeature) return;
       const aboveSourceId = LayerActions.findFeatureSourceId(map, aboveFeature);
+      if (!aboveSourceId) return;
 
       const beforeLayerId =
         direction === "forward"
@@ -161,7 +178,7 @@ export class ActionOrderLayer {
         );
         AppGlobals.updateDataStoreByIds(relativeFeature.id, feature.id);
       } else {
-        if (relativeFeature.properties.index === AppGlobals.getMaxIndex()) {
+        if (relativeFeature.properties?.index === AppGlobals.getMaxIndex()) {
           if (isImageElement(feature)) {
             this.removeLayer(map, feature.id);
           }
@@ -181,7 +198,7 @@ export class ActionOrderLayer {
           }
 
           ActionLoadData2D.AddFeature(
-            newFeatureCollection(feature, relativeFeature.properties.index),
+            newFeatureCollection(feature, relativeFeature.properties?.index),
             map,
             newId,
             beforeLayerId
@@ -206,9 +223,8 @@ export class ActionOrderLayer {
           map,
           newFeature
         );
-        const source = map.getSource(targetSourceId);
-        const data = source._data || source._options?.data;
-        const features = data?.features || [];
+        const source = getSourceElement(map, targetSourceId!);
+        const features = getFeaturesBySource(source);
 
         const reordered = isForward
           ? [...features, relativeFeature]
@@ -232,7 +248,7 @@ export class ActionOrderLayer {
           : "";
 
         ActionLoadData2D.AddFeature(
-          newFeatureCollection(relativeFeature, feature.properties.index),
+          newFeatureCollection(relativeFeature, feature.properties?.index),
           map,
           newId,
           layerId
@@ -245,7 +261,8 @@ export class ActionOrderLayer {
     }
   };
 
-  static removeLayer(map, layerId) {
+  static removeLayer(map: Map, layerId: string | number | undefined) {
+    if (!layerId) return;
     const currentLayerId = [`layer-${layerId}`, `layer-outline-${layerId}`];
     const currentSourceId = `source-${layerId}`;
 
@@ -255,14 +272,17 @@ export class ActionOrderLayer {
     LayerActions.removeSource(map, currentSourceId);
   }
 
-  static updateDataAftermove(map, feature, currentSourceId) {
+  static updateDataAftermove(
+    map: Map,
+    feature: FeatureType,
+    currentSourceId: string
+  ) {
     if (!isImageElement(feature)) {
-      const fromSource = map.getSource(currentSourceId);
+      const fromSource = getSourceElement(map, currentSourceId);
       if (!fromSource) return;
-      const fromData = fromSource._data || fromSource._options?.data;
-
-      if (!fromData?.features) return;
-      const newFrom = fromData.features.filter((f) => f.id !== feature.id);
+      const features = getFeaturesBySource(fromSource);
+      if (features.length == 0) return;
+      const newFrom = features.filter((f) => f.id !== feature.id);
 
       if (newFrom.length === 0) {
         const idLayer = currentSourceId.replace("source-", "");

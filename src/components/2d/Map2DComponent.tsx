@@ -36,7 +36,7 @@ const Map2DComponent = () => {
     map.doubleClickZoom.disable();
     // map.dragPan.disable();
 
-    ActionDrawElement.Terradraw({map, drawRef, isPathRef});
+    ActionDrawElement.Terradraw(map, drawRef, isPathRef);
 
     map.on("click", (e) => {
       // const selected = drawRef.current.getFeatures(true).features;
@@ -57,10 +57,7 @@ const Map2DComponent = () => {
 
     map.on("load", () => {
       ActionLoadData2D.loadDefaultData(map);
-      ActionBoundingBox.hoverBBoxSelected({
-        selectedElement,
-        map: mapRef.current,
-      });
+      ActionBoundingBox.hoverBBoxSelected(mapRef.current!, selectedElement);
     });
 
     ActionMenuOption.initRightMouse(map);
@@ -75,10 +72,18 @@ const Map2DComponent = () => {
   }, [selectedElement]);
 
   // Hide context menu when click outside
-  document.addEventListener("click", () => {
-    const existing = document.getElementById("map-context-menu");
-    if (existing) existing.remove();
-  });
+  useEffect(() => {
+    const handleClick = () => {
+      const existing = document.getElementById("map-context-menu");
+      if (existing) existing.remove();
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   useEffect(() => {
     setHide(!selectedElement);

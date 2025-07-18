@@ -1,7 +1,7 @@
 import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
 import { GeoJSONSource, LayerSpecification, Map } from "maplibre-gl";
 import { RefObject } from "react";
-import { ActionLoadData2D, GroupFeature } from "./actionLoadData2D";
+import { ActionLoadData2D } from "./actionLoadData2D";
 import { isPathElement } from "../element/typeChecks";
 import {
   loadFromLocalStorage,
@@ -11,7 +11,10 @@ import {
 } from "@/lib/localStorageUtils";
 import { AppGlobals } from "@/lib/appGlobals";
 import { generateUUID } from "@/constants/mapConfig";
-import { DistanceElement } from "../element/distanceElement";
+import {
+  DistanceElement,
+  PointNearAnySegment,
+} from "../element/distanceElement";
 import type {
   Feature,
   FeatureCollection,
@@ -19,8 +22,18 @@ import type {
   GeoJsonProperties,
   Position,
 } from "geojson";
-import { LonLat, Path, FeatureType } from "@/types/featureTypes";
-import { getCoordinates } from "../element/getDataElement";
+import {
+  LonLat,
+  Path,
+  FeatureType,
+  FeatureCollectionType,
+  GroupFeatureType,
+} from "@/types/featureTypes";
+import {
+  getCoordinates,
+  getFeaturesBySource,
+  getSourceElement,
+} from "../element/getDataElement";
 
 interface Props {
   map: Map | null;
@@ -35,13 +48,18 @@ interface LoadDataProps {
 }
 
 interface StartPointPathType {
-  point: [number, number];
-  segment: [number, number][];
+  point: Position;
+  segment: Position[];
 }
 
 export class ActionDrawElement {
-  static Terradraw = ({ map, drawRef, isPathRef }: Props): void => {
+  static Terradraw = (
+    map: Map,
+    drawRef: RefObject<MaplibreTerradrawControl | null>,
+    isPathRef: RefObject<boolean>
+  ) => {
     if (!map || !drawRef) return;
+
     map.on("load", () => {
       const draw = new MaplibreTerradrawControl();
 
@@ -49,19 +67,18 @@ export class ActionDrawElement {
       drawRef.current = draw;
 
       // 🔁 Lắng nghe thay đổi và tự động lưu
-      this.SaveAndLoadData({ draw, map, isPathRef });
-      this.SaveAndLoadPath({ draw, map, isPathRef });
+      this.SaveAndLoadData(draw, map, isPathRef);
+      this.SaveAndLoadPath(draw, map, isPathRef);
 
       // 🔁 Lắng nghe thay đổi màu
       ActionLoadData2D.LoadColor(map);
     });
   };
 
-  static getLastSourceInfo = (
-    map: Map
-  ): { layerId: string; sourceId: string } | null => {
+  static getLastSourceInfo = (map: Map) => {
     const layers = map.getStyle().layers || [];
 
+    // Lọc ra các layer có id bắt đầu bằng 'layer-' và có source đi kèm
     const layerWithSources = layers
       .filter((l): l is LayerSpecification & { source: string } => {
         return (
@@ -75,12 +92,13 @@ export class ActionDrawElement {
         sourceId: l.source,
       }));
 
+    // Lấy layer cuối cùng trong danh sách
     return layerWithSources.length
       ? layerWithSources[layerWithSources.length - 1]
       : null;
   };
 
-  static findSourceWithPathType(map: Map): string | null {
+  static findSourceWithPathType(map: Map) {
     if (!map || !map.getStyle()?.sources) return null;
 
     const allSources = Object.keys(map.getStyle().sources).filter((id) =>
@@ -88,9 +106,7 @@ export class ActionDrawElement {
     );
 
     for (const sourceId of allSources) {
-      const source = map.getSource(sourceId);
-
-      // Đảm bảo là GeoJSONSource
+      const source = getSourceElement(map, sourceId);
       if (!source || (source.type !== "geojson" && !(source as any).getData))
         continue;
 
@@ -103,13 +119,20 @@ export class ActionDrawElement {
       if (!features?.length) continue;
 
       const found = features.find((f: any) => isPathElement(f));
-      if (found) return sourceId;
+
+      if (found) {
+        return sourceId; // ✅ Trả về sourceId đầu tiên tìm được
+      }
     }
 
-    return null;
+    return null; // ❌ Không tìm thấy
   }
 
-  static SaveAndLoadData = ({ draw, map, isPathRef }: LoadDataProps): void => {
+  static SaveAndLoadData = (
+    draw: MaplibreTerradrawControl,
+    map: Map,
+    isPathRef: RefObject<boolean>
+  ) => {
     const terraDraw = draw.getTerraDrawInstance();
 
     terraDraw.on("finish", () => {
@@ -125,7 +148,7 @@ export class ActionDrawElement {
       }
 
       const featuresNotAvailable = drawFeatures.filter(
-        (item) => !geojson.features.some((bItem: any) => bItem.id === item.id)
+        (item) => !geojson.features.some((bItem) => bItem.id === item.id)
       );
 
       const newIndex = AppGlobals.getMaxIndex() + 1;
@@ -148,19 +171,12 @@ export class ActionDrawElement {
 
       // 👉 Chỉ add nếu chưa có
       const lastSourceInfo = this.getLastSourceInfo(map);
-
       const lastSource = lastSourceInfo
-        ? (map.getSource(lastSourceInfo.sourceId) as GeoJSONSource)
+        ? getSourceElement(map, lastSourceInfo.sourceId)
         : null;
 
-      const currentData = lastSource?._data || lastSource?._options?.data;
-
-      // Đảm bảo currentData không phải là string trước khi truy cập .features
-      const currentFeatures: Feature<Geometry, GeoJsonProperties>[] =
-        typeof currentData !== "string" &&
-        currentData?.type === "FeatureCollection"
-          ? currentData.features
-          : [];
+      // Lấy data hiện tại trong source cuối (nếu có)
+      const currentFeatures = getFeaturesBySource(lastSource);
 
       updatedFeatures.forEach((f) => {
         // Nếu có source cuối và cùng loại geometry → append vào source đó
@@ -169,7 +185,7 @@ export class ActionDrawElement {
           currentFeatures.length > 0 &&
           currentFeatures[0].geometry.type === f.geometry.type
         ) {
-          const merged: FeatureCollection<Geometry, GeoJsonProperties> = {
+          const merged: FeatureCollectionType = {
             type: "FeatureCollection",
             features: [...currentFeatures, f],
           };
@@ -180,9 +196,9 @@ export class ActionDrawElement {
             type: "FeatureCollection",
             sourceType: f.geometry.type,
             features: [f],
-          } as GroupFeature;
+          } as GroupFeatureType;
           // Tạo source mới
-          ActionLoadData2D.AddFeature({ features: geojson, map, index });
+          ActionLoadData2D.AddFeature(geojson, map, index);
         }
       });
 
@@ -198,10 +214,14 @@ export class ActionDrawElement {
     });
   };
 
-  static SaveAndLoadPath = ({ draw, map, isPathRef }: LoadDataProps): void => {
+  static SaveAndLoadPath = (
+    draw: MaplibreTerradrawControl,
+    map: Map,
+    isPathRef: RefObject<boolean>
+  ) => {
     const terraDraw = draw.getTerraDrawInstance();
 
-    let startPointPath: StartPointPathType | null = null;
+    let startPointPath: PointNearAnySegment | null = null;
 
     terraDraw.on("change", () => {
       if (!isPathRef.current) return;
@@ -210,32 +230,28 @@ export class ActionDrawElement {
       const current = all.find((f) => f.geometry.type === "LineString");
       const pathSourceInfo = this.findSourceWithPathType(map);
       const lastSource = pathSourceInfo
-        ? (map.getSource(pathSourceInfo) as GeoJSONSource)
+        ? getSourceElement(map, pathSourceInfo)
         : null;
 
       if (!current || !lastSource) return;
       const coords = current.geometry.coordinates;
 
-      const sourceData = lastSource._data || lastSource._options?.data;
-      const coordinatesElementPath =
-        typeof sourceData !== "string" &&
-        sourceData?.type === "FeatureCollection"
-          ? getCoordinates(sourceData?.features?.[0].geometry)
-          : [];
+      const sourceData = getFeaturesBySource(lastSource);
+      const coordinatesElementPath = getCoordinates(sourceData?.[0].geometry);
 
       // 👉 Khi user mới click 1 điểm (bắt đầu vẽ)
       if (coords.length > 0) {
-        const startPoint = coords[0];
+        const startPoint = coords[0] as Position;
 
         // const distance = 0.00005;
         const zoom = map.getZoom();
         const distance = 0.005 / Math.pow(2, zoom - 10);
 
-        const nearPoint = DistanceElement.isPointNearAnySegment({
-          point: startPoint as LonLat,
-          lines: coordinatesElementPath as Path[],
-          distance,
-        });
+        const nearPoint = DistanceElement.isPointNearAnySegment(
+          startPoint,
+          coordinatesElementPath as Position[][],
+          distance
+        );
 
         if (!nearPoint) {
           setTimeout(() => {
@@ -277,7 +293,7 @@ export class ActionDrawElement {
       // 👉 Chỉ add nếu chưa có
       const pathSourceInfo = this.findSourceWithPathType(map);
       const lastSource = pathSourceInfo
-        ? (map.getSource(pathSourceInfo) as GeoJSONSource)
+        ? getSourceElement(map, pathSourceInfo)
         : null;
 
       updatedFeatures.forEach((f) => {
@@ -285,7 +301,7 @@ export class ActionDrawElement {
         if (!lastSource) {
           // 👈 Nếu chưa có source Path, tạo mới
           const index = generateUUID();
-          const geojson: GroupFeature = {
+          const geojson: GroupFeatureType = {
             type: "FeatureCollection",
             sourceType: "Path",
             features: [
@@ -302,22 +318,21 @@ export class ActionDrawElement {
               },
             ],
           };
-          ActionLoadData2D.AddFeature({ features: geojson, map, index });
+          ActionLoadData2D.AddFeature(geojson, map, index);
           AppGlobals.setDataToStore(geojson.features[0]);
           newDataToLocalStorage(geojson.features[0]);
         } else {
           // 👈 Nếu đã có source Path → thêm đoạn vào MultiLineString hiện tại
           const sourceData = lastSource._data || lastSource._options?.data;
-          const feature =
-            typeof sourceData !== "string" &&
-            sourceData?.type === "FeatureCollection"
-              ? sourceData?.features?.[0]
-              : undefined;
+          const feature = getFeaturesBySource(lastSource)[0];
 
           if (feature?.geometry?.type === "MultiLineString") {
             if (startPointPath === null) return;
-            const [segA, segB] = startPointPath.segment;
+            const segment = startPointPath.segment;
             const insertPoint = startPointPath.point;
+            if (!segment || !insertPoint) return;
+
+            const [segA, segB] = segment;
 
             // Duyệt qua từng đoạn (LineString con)
             for (const line of feature.geometry.coordinates) {
@@ -343,14 +358,12 @@ export class ActionDrawElement {
               }
             }
 
-            const newCoords = (oldCoordinates as Position[]).slice(1);
-            const newCoordinates: Position[] = [insertPoint, ...newCoords];
+            const newCoords = oldCoordinates.slice(1);
+            const newCoordinates = [insertPoint, ...newCoords];
             feature.geometry.coordinates.push(newCoordinates); // ➕ Add đoạn mới
 
             // Cập nhật dữ liệu lên map và vào store
-            lastSource.setData(
-              sourceData as FeatureCollection<Geometry, GeoJsonProperties>
-            );
+            lastSource.setData(sourceData as FeatureCollectionType);
             AppGlobals.setDataToStore(feature);
             updateFeatureInLocalStorage(feature);
           }

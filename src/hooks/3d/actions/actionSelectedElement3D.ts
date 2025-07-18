@@ -3,9 +3,18 @@ import { isPathElement } from "@/hooks/2d/element/typeChecks";
 import { AppGlobals } from "@/lib/appGlobals";
 import { LngLatLike, Map, Marker } from "maplibre-gl";
 import { ActionConvertData } from "./actionConvertData";
+import { FeatureType } from "@/types/featureTypes";
 
 export class ActionSelectedElement3D {
-  static getSelectedData({ map, setSelectedElement }:{map: Map, setSelectedElement: any}) {
+  static getSelectedData({
+    map,
+    setSelectedElement,
+  }: {
+    map: Map;
+    setSelectedElement: React.Dispatch<
+      React.SetStateAction<FeatureType | null>
+    >;
+  }) {
     let currentMarker: Marker | null = null; // 👉 Lưu marker hiện tại
 
     map.on("click", (e) => {

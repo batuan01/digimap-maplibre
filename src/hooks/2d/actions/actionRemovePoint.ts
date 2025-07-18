@@ -8,12 +8,15 @@ import { ActionBoundingBox } from "./actionBoundingBox";
 import { ActionHandleDragging } from "./actionHandleDragging";
 import { LayerActions } from "./actionLayer";
 import { ActionRotateElement } from "./actionRotateElement";
+import { Map, MapGeoJSONFeature, MapMouseEvent } from "maplibre-gl";
+import { FeatureType } from "@/types/featureTypes";
+import { getSourceElement } from "../element/getDataElement";
 
 export class ActionRemovePoint {
-  static targetPoint = null;
-  static parentFeature = null;
+  static targetPoint: MapGeoJSONFeature | null = null;
+  static parentFeature: FeatureType | null = null;
 
-  static setRemovePoint(map, e) {
+  static setRemovePoint(map: Map, e: MapMouseEvent) {
     const featuresHandles = map.queryRenderedFeatures(e.point, {
       layers: ["handles-layer"],
     });
@@ -24,7 +27,7 @@ export class ActionRemovePoint {
     const allFeatures = AppGlobals.getElements();
     const targetFeature = allFeatures.find((f) => f.id === parentId);
     if (!targetFeature) return;
-
+    console.log("featuresHandles[0]", featuresHandles[0]);
     this.targetPoint = featuresHandles[0];
     this.parentFeature = targetFeature;
   }
@@ -34,7 +37,7 @@ export class ActionRemovePoint {
     this.parentFeature = null;
   }
 
-  static removeOnlyPoint(map) {
+  static removeOnlyPoint(map: Map) {
     if (!this.targetPoint || !this.parentFeature) return;
 
     if (
@@ -126,8 +129,8 @@ export class ActionRemovePoint {
       LayerActions.removeSource(map, sourceId);
 
       ActionHandleDragging.removeHandlesPoint(map);
-      ActionBoundingBox.clearBoundingBox({ map, layerType: "selected" });
-      ActionBoundingBox.clearBoundingBox({ map, layerType: "hover" });
+      ActionBoundingBox.clearBoundingBox(map, "selected");
+      ActionBoundingBox.clearBoundingBox(map, "hover");
       ActionRotateElement.destroy(map);
 
       AppGlobals.removeDataById(this.parentFeature.id);
@@ -144,7 +147,9 @@ export class ActionRemovePoint {
         map,
         this.parentFeature
       );
-      const source = map.getSource(sourceId);
+
+      if (!sourceId) return;
+      const source = getSourceElement(map, sourceId);
       if (source) {
         source.setData({
           type: "FeatureCollection",
