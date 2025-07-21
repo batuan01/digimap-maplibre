@@ -96,7 +96,7 @@ const Map2DComponent = () => {
       <ButtonShow onClick={() => setHide(!hide)}>Show</ButtonShow>
       {!hide && (
         <FormProperty>
-          <BasicComponent drawRef={drawRef} mapRef={mapRef} />
+          <BasicComponent mapContainer={mapContainer} mapRef={mapRef} />
         </FormProperty>
       )}
 

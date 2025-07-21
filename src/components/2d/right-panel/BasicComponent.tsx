@@ -3,18 +3,18 @@ import { LayerActions } from "@/hooks/2d/actions/actionLayer";
 import { ActionSetData } from "@/hooks/2d/actions/actionSetData";
 import { AppGlobals } from "@/lib/appGlobals";
 import { updateFeatureInLocalStorage } from "@/lib/localStorageUtils";
-import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
-import { Map } from "maplibre-gl";
-import { RefObject, useContext, useEffect, useState } from "react";
-import styled from "styled-components";
 import { FeatureType } from "@/types/featureTypes";
+import { Map } from "maplibre-gl";
+import { RefObject, useEffect, useState } from "react";
+import styled from "styled-components";
+import { ExportMapToPDF } from "./ExportMapToPDF";
 
 interface Props {
-  drawRef?: RefObject<MaplibreTerradrawControl | null>;
+  mapContainer: RefObject<HTMLDivElement | null>;
   mapRef: RefObject<Map | null>;
 }
 
-export const BasicComponent = ({ drawRef, mapRef }: Props) => {
+export const BasicComponent = ({ mapContainer, mapRef }: Props) => {
   const [color, setColor] = useState<string>("#787878");
   const [height, setHeight] = useState<string>("");
   const [label, setLabel] = useState<string>("");
@@ -127,6 +127,8 @@ export const BasicComponent = ({ drawRef, mapRef }: Props) => {
       >
         LogData
       </SubmitButton>
+
+      <ExportMapToPDF mapContainer={mapContainer} mapRef={mapRef} />
 
       <FormGroup>
         <Label htmlFor="label">Label:</Label>

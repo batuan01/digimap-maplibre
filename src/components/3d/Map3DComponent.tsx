@@ -1,23 +1,23 @@
 "use client";
 
 // Map3DView.tsx
-import "maplibre-gl/dist/maplibre-gl.css";
-import { useContext, useEffect, useRef } from "react";
-import styled from "styled-components";
-import { useMapContext } from "@/contexts/useMapContext";
-import { useRouter } from "next/navigation";
-import { loadFromLocalStorage } from "@/lib/localStorageUtils";
-import { ActionConvertData } from "@/hooks/3d/actions/actionConvertData";
-import { createMap } from "@/hooks/map";
-import { Map } from "maplibre-gl";
-import { ActionSelectedElement3D } from "@/hooks/3d/actions/actionSelectedElement3D";
-import { ActionLoadLabel } from "@/hooks/3d/actions/actionLoadLabel";
-import { ActionLoadData3D } from "@/hooks/3d/actions/actionLoadData3D";
 import { ZOOM_OVERVIEW } from "@/constants/mapConfig";
-import { PropertiesComponent } from "./left-panel/PropertiesComponent";
-import CustomToolbar from "../bottom-panel/CustomToolbar";
-import { FeatureCollection } from "geojson";
+import { useMapContext } from "@/contexts/useMapContext";
+import { ActionConvertData } from "@/hooks/3d/actions/actionConvertData";
+import { ActionLoadData3D } from "@/hooks/3d/actions/actionLoadData3D";
+import { ActionLoadLabel } from "@/hooks/3d/actions/actionLoadLabel";
+import { ActionSelectedElement3D } from "@/hooks/3d/actions/actionSelectedElement3D";
+import { createMap } from "@/hooks/map";
+import { loadFromLocalStorage } from "@/lib/localStorageUtils";
 import { FeatureCollectionType } from "@/types/featureTypes";
+import { Map } from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import styled from "styled-components";
+import { ExportMapToPDF } from "../2d/right-panel/ExportMapToPDF";
+import CustomToolbar from "../bottom-panel/CustomToolbar";
+import { PropertiesComponent } from "./left-panel/PropertiesComponent";
 
 // const booths = require("../data/booths.geojson");
 
@@ -92,6 +92,8 @@ const MapLibre3D = () => {
         <button type="button" onClick={logdata}>
           Save
         </button>
+
+        <ExportMapToPDF mapContainer={mapContainer} mapRef={mapRef} />
       </FormProperty>
 
       <PropertiesComponent mapRef={mapRef} />
@@ -111,6 +113,9 @@ const FormProperty = styled.div`
   padding: 15px;
   width: 300px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const SubmitButton = styled.button`
