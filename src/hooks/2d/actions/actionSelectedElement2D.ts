@@ -11,21 +11,31 @@ import { ActionSetData } from "./actionSetData";
 import { ActionDragElement } from "./actionDragElement";
 import { Map } from "maplibre-gl";
 import { FeatureType } from "@/types/featureTypes";
-import { Position } from "geojson";
+import {
+  Feature,
+  GeoJsonProperties,
+  LineString,
+  Point,
+  Polygon,
+  Position,
+} from "geojson";
 
 export class ActionSelectedElement2D {
-  static findFeatureAtPoint(point: Position, features) {
+  static findFeatureAtPoint(point: Position, features: FeatureType[]) {
     const clickedPoint = turf.point(point);
 
     return [...features]
-      .sort((a, b) => Number(b.properties.index) - Number(a.properties.index))
+      .sort((a, b) => Number(b.properties?.index) - Number(a.properties?.index))
       .find((feature) => {
         const geom = feature.geometry;
         if (!geom) return false;
 
         // Polygon & MultiPolygon
-        if (geom.type === "Polygon" || geom.type === "MultiPolygon") {
-          return turf.booleanPointInPolygon(clickedPoint, feature);
+        if (geom.type === "Polygon") {
+          return turf.booleanPointInPolygon(
+            clickedPoint,
+            feature as Feature<Polygon, GeoJsonProperties>
+          );
         }
 
         // Custom type "Image" dạng Polygon
@@ -36,9 +46,13 @@ export class ActionSelectedElement2D {
 
         // LineString
         if (geom.type === "LineString") {
-          const distance = turf.pointToLineDistance(clickedPoint, feature, {
-            units: "meters",
-          });
+          const distance = turf.pointToLineDistance(
+            clickedPoint,
+            feature as Feature<LineString, GeoJsonProperties>,
+            {
+              units: "meters",
+            }
+          );
 
           return distance < 10;
         }
@@ -60,9 +74,13 @@ export class ActionSelectedElement2D {
 
         // Point
         if (geom.type === "Point") {
-          const dist = turf.distance(clickedPoint, feature, {
-            units: "meters",
-          });
+          const dist = turf.distance(
+            clickedPoint,
+            feature as Feature<Point, GeoJsonProperties>,
+            {
+              units: "meters",
+            }
+          );
           return dist < 5; // Cho phép khoảng cách < 5m là "trúng"
         }
 
@@ -138,11 +156,11 @@ export class ActionSelectedElement2D {
 
       // Xử lý chuẩn hóa thành Polygon để vẽ bbox và xoay
       let targetPolygon = null;
-      switch (feature.geometry.type) {
+      switch (feature.properties?.type) {
         case "Polygon":
-        case "MultiPolygon":
         case "LineString":
         case "MultiLineString":
+        case "Path":
           targetPolygon = feature;
           break;
 
@@ -154,7 +172,7 @@ export class ActionSelectedElement2D {
 
         case "Point":
           const buffer = turf.buffer(feature, 0.0001, { units: "degrees" });
-          if (isPolygonElement(buffer)) {
+          if (buffer && isPolygonElement(buffer as FeatureType)) {
             targetPolygon = buffer;
           }
           break;

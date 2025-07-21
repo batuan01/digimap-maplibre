@@ -21,7 +21,7 @@ export const DirectionPanel = ({
   startFeature,
   pathElement,
 }: Props) => {
-    const { selectedElement, setSelectedElement } = useMapContext();
+  const { selectedElement, setSelectedElement } = useMapContext();
 
   const handleBack = () => {
     setMode("properties");
@@ -40,6 +40,8 @@ export const DirectionPanel = ({
       selectedElement,
       pathElement
     );
+
+    if (!endPoint) return;
 
     // Bước 1: Chuyển MultiLineString thành LineString collection
     const geojsonData = ActionConvertData.convertMultiLineToLine(pathElement);

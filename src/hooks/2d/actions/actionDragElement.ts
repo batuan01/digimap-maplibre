@@ -85,8 +85,6 @@ export class ActionDragElement {
       currentFeature = moved; // ✅ lưu polygon mới nhất
       onUpdate(moved);
 
-      ActionSetData.setHandlesData(map, moved);
-
       rafId = null;
     };
 

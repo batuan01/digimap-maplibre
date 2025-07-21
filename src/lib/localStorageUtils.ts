@@ -22,7 +22,8 @@ export const newDataToLocalStorage = (feature: FeatureType): void => {
   });
 };
 
-export const removeFeatureFromLocalStorage = (idToRemove: string): void => {
+export const removeFeatureFromLocalStorage = (idToRemove: string | number | undefined): void => {
+  if (!idToRemove) return;
   const geojson = loadFromLocalStorage();
   if (!geojson || !geojson.features) return;
   const updatedFeatures = geojson.features.filter(

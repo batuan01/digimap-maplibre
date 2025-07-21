@@ -30,9 +30,9 @@ export const BasicComponent = ({ drawRef, mapRef }: Props) => {
     mapRef: RefObject<Map | null>
   ): void => {
     const element = storedData?.find((el) => el.id === selectedElement?.id);
-    if (!element) return;
-
     const map = mapRef.current;
+    if (!element || !map) return;
+
     const updated: FeatureType = {
       ...element,
       properties: {
@@ -134,7 +134,7 @@ export const BasicComponent = ({ drawRef, mapRef }: Props) => {
           type="string"
           id="label"
           placeholder="label..."
-          value={label}
+          value={label ?? ""}
           onChange={(e) => {
             const value = e.target.value;
             setLabel(value); // 👈 cập nhật state để tránh cảnh báo
@@ -149,7 +149,7 @@ export const BasicComponent = ({ drawRef, mapRef }: Props) => {
           type="number"
           id="height"
           placeholder="height..."
-          value={height}
+          value={height ?? ""}
           onChange={(e) => {
             const value = e.target.value;
             setHeight(value); // 👈 cập nhật state để tránh cảnh báo
@@ -182,7 +182,7 @@ export const BasicComponent = ({ drawRef, mapRef }: Props) => {
           type="string"
           id="highlight"
           placeholder="Highlight Image..."
-          value={highlight}
+          value={highlight ?? ""}
           onChange={(e) => {
             const value = e.target.value;
             setHighlight(value); // 👈 cập nhật state để tránh cảnh báo

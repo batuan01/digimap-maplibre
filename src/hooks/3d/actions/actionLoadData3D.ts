@@ -57,7 +57,6 @@ export class ActionLoadData3D {
 
     // Ẩn hoặc xoá layer/source dựa theo zoom
     const groupsToRemove = zoom > ZOOM_OVERVIEW ? splitOverview : splitDetail;
-    console.log("groupsToRemove", groupsToRemove);
     groupsToRemove.forEach((group) => {
       const id = group.features[0].id;
       LayerActions.remove(map, `source-${id}`, `layer-${id}`);

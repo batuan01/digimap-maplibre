@@ -110,11 +110,8 @@ export class ActionDrawElement {
       if (!source || (source.type !== "geojson" && !(source as any).getData))
         continue;
 
-      const geojsonSource = source as GeoJSONSource;
-
       // Lấy dữ liệu GeoJSON hiện tại
-      const data = geojsonSource.getData?.();
-      const features = (data as any)?.features;
+      const features = getFeaturesBySource(source);
 
       if (!features?.length) continue;
 

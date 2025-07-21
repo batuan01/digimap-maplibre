@@ -5,16 +5,24 @@ import { ActionHandleDragging } from "./actionHandleDragging";
 import { ActionLoadImage } from "./actionLoadImage";
 import { AppGlobals } from "@/lib/appGlobals";
 import { LayerActions } from "./actionLayer";
+import { Map, MapMouseEvent } from "maplibre-gl";
+import { FeatureCollectionType, FeatureType } from "@/types/featureTypes";
+import { Feature, Point, Position } from "geojson";
+import { getSourceElement } from "../element/getDataElement";
 
 export class ActionRotateElement {
-  static handle = null;
-  static startAngle = null;
-  static center = null;
-  static polygonFeature = null;
-  static map = null;
-  static onUpdate = null;
+  static handle: Feature<Point, { type: string }> | null = null;
+  static startAngle: number | null = null;
+  static center: Position | null = null;
+  static polygonFeature: FeatureType | null = null;
+  static map: Map | null = null;
+  static onUpdate: ((data: FeatureType) => void) | null = null;
 
-  static setup(map, polygonFeature, onUpdate) {
+  static setup(
+    map: Map,
+    polygonFeature: FeatureType,
+    onUpdate: (data: FeatureType) => void
+  ) {
     this.map = map;
     this.polygonFeature = polygonFeature;
     this.onUpdate = onUpdate;
@@ -28,7 +36,7 @@ export class ActionRotateElement {
     this.bindEvents();
   }
 
-  static addHandle(map, polygonFeature) {
+  static addHandle(map: Map, polygonFeature: FeatureType) {
     if (!polygonFeature || !map) return;
 
     const bboxPolygons =
@@ -59,9 +67,9 @@ export class ActionRotateElement {
     const data = {
       type: "FeatureCollection",
       features: [this.handle],
-    };
+    } as FeatureCollectionType;
 
-    const source = map.getSource("rotate-handle");
+    const source = getSourceElement(map, "rotate-handle");
 
     if (source) {
       source.setData(data);
@@ -86,10 +94,12 @@ export class ActionRotateElement {
   }
 
   static bindEvents() {
+    if (!this.map) return;
     this.map.on("mousedown", this.onMouseDown);
   }
 
-  static onMouseDown = (e) => {
+  static onMouseDown = (e: MapMouseEvent) => {
+    if (!this.map || !this.handle) return;
     const point = [e.lngLat.lng, e.lngLat.lat];
     const pt = turf.point(point);
 
@@ -103,7 +113,7 @@ export class ActionRotateElement {
 
     const isOnHandle = turf.booleanPointInPolygon(
       pt,
-      turf.buffer(this.handle, 0.0002, { units: "degrees" })
+      turf.buffer(this.handle, 0.0002, { units: "degrees" }) as any
     );
     if (!isOnHandle) return;
 
@@ -118,7 +128,15 @@ export class ActionRotateElement {
     ActionHandleDragging.removeHandlesPoint(this.map);
   };
 
-  static onMouseMove = (e) => {
+  static onMouseMove = (e: MapMouseEvent) => {
+    if (
+      !this.map ||
+      !this.startAngle ||
+      !this.polygonFeature ||
+      !this.center ||
+      !this.handle
+    )
+      return;
     const currentPoint = [e.lngLat.lng, e.lngLat.lat];
     const currentAngle = this.angleTo(currentPoint);
     const angleDelta = currentAngle - this.startAngle;
@@ -157,6 +175,7 @@ export class ActionRotateElement {
   };
 
   static onMouseUp = () => {
+    if (!this.map || !this.polygonFeature) return;
     this.map.getCanvas().style.cursor = "";
     this.map.dragPan.enable();
     this.map.off("mousemove", this.onMouseMove);
@@ -171,8 +190,9 @@ export class ActionRotateElement {
   };
 
   static updateHandle(rotatedPoint = this.handle) {
-    const source = this.map.getSource("rotate-handle");
-    if (source) {
+    if (!this.map) return;
+    const source = getSourceElement(this.map, "rotate-handle");
+    if (source && rotatedPoint) {
       source.setData({
         type: "FeatureCollection",
         features: [rotatedPoint],
@@ -180,14 +200,15 @@ export class ActionRotateElement {
     }
   }
 
-  static destroy(map) {
+  static destroy(map: Map) {
     const sourceId = "rotate-handle";
     const layerId = "rotate-handle-layer";
 
     LayerActions.remove(map, sourceId, layerId);
   }
 
-  static angleTo(point) {
+  static angleTo(point: Position) {
+    if (!this.center) return 0;
     const dx = point[0] - this.center[0];
     const dy = point[1] - this.center[1];
     return (Math.atan2(dy, dx) * 180) / Math.PI;

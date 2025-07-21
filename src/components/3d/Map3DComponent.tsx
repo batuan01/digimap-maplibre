@@ -31,7 +31,7 @@ const MapLibre3D = () => {
   // const storedData = booths;
 
   const polygonFeatures = ActionConvertData.filterPolygonElements(
-    storedData.features
+    storedData?.features
   );
 
   const labelFeatures = ActionConvertData.convertLabel(polygonFeatures);

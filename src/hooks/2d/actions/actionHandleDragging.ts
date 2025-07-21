@@ -70,6 +70,7 @@ export class ActionHandleDragging {
         }));
       }
 
+      case "Path":
       case "MultiLineString": {
         const coordinates = feature.geometry.coordinates as Position[][];
         return coordinates.flatMap((line, lineIndex) =>
@@ -168,6 +169,7 @@ export class ActionHandleDragging {
           break;
         }
 
+        case "Path":
         case "MultiLineString": {
           if (geometryType !== "MultiLineString") return;
           const indexRaw = selectedHandle.properties.index;

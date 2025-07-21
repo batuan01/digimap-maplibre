@@ -34,7 +34,7 @@ export class ActionConvertData {
   }
 
   static filterPolygonElements(data: FeatureType[]) {
-    if (!data.length) return [];
+    if (!data || !data.length) return [];
 
     return data.filter((f) => isPolygonElement(f));
   }

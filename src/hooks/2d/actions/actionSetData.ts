@@ -56,7 +56,7 @@ export class ActionSetData {
 
   static setHandlesData(map: Map, data: FeatureType) {
     const sourceData = getSourceElement(map, "handles-source");
-    if (data || !sourceData) return;
+    if (!data || !sourceData) return;
     const newHandles = ActionHandleDragging.getCornerHandles(data);
 
     sourceData.setData({
