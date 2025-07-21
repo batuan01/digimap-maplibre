@@ -24,7 +24,6 @@ export const createMap = ({
       "https://api.maptiler.com/maps/fefc1891-4e0d-4102-a51f-09768f839b85/style.json?key=S1qTEATai9KydkenOF6W",
     center: DEFAULT_COORDINATES as LngLatLike,
     zoom,
-    hash: "map",
     pitchWithRotate,
     dragRotate,
     touchPitch: false,

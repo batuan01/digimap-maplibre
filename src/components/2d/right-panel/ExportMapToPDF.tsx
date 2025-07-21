@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import { Map } from "maplibre-gl";
 import { RefObject } from "react";
-import styled from "styled-components";
+import { PublishButton } from "./RightPanel";
 
 export const ExportMapToPDF = ({
   mapContainer,
@@ -40,22 +40,8 @@ export const ExportMapToPDF = ({
   };
 
   return (
-    <SubmitButton onClick={handleExport} type="button">
-      Xuất bản đồ ra PDF
-    </SubmitButton>
+    <PublishButton onClick={handleExport} type="button">
+      Export PDF
+    </PublishButton>
   );
 };
-
-const SubmitButton = styled.button`
-  padding: 0.6rem 1.2rem;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-
-  &:hover {
-    background: #0056b3;
-  }
-`;

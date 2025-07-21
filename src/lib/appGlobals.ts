@@ -1,4 +1,7 @@
+import { LayerActions } from "@/hooks/2d/actions/actionLayer";
+import { ActionSetData } from "@/hooks/2d/actions/actionSetData";
 import { FeatureType } from "@/types/featureTypes";
+import { Map } from "maplibre-gl";
 
 export class AppGlobals {
   static elements: FeatureType[] = [];
@@ -61,17 +64,6 @@ export class AppGlobals {
     }
   }
 
-  static getRelativeId(id: string, condition = "forward") {
-    const index = this.elements.findIndex((f) => f.id === id);
-    if (index === -1) return null;
-
-    let targetIndex = condition === "forward" ? index + 1 : index - 1;
-
-    if (targetIndex < 0 || targetIndex >= this.elements.length) return null;
-
-    return this.elements[targetIndex]?.id || null;
-  }
-
   static getMaxIndex() {
     return this.elements.length
       ? Math.max(...this.elements.map((f) => Number(f.properties?.index)))
@@ -100,5 +92,46 @@ export class AppGlobals {
       );
 
     return candidates[0] || null;
+  }
+
+  static getFormValue<T extends string | number>(
+    element: FeatureType | null | undefined,
+    key: string,
+    defaultData: T
+  ): T {
+    if (!element) return defaultData;
+
+    const found = this.elements.find((f) => f.id === element.id);
+    const value = found?.properties?.[key];
+
+    return (value ? value : defaultData) as T;
+  }
+
+  static updateFormValue(
+    element: FeatureType | null | undefined,
+    data: Record<string, string | number>,
+    map: Map
+  ): void {
+    if (!element) return;
+
+    const storedData: FeatureType[] = this.getElements();
+    const found = storedData.find((f) => f.id === element.id);
+    if (!found) return;
+
+    if (!found.properties) found.properties = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      found.properties![key] = value;
+    });
+
+    if (map) {
+      const updated: FeatureType = {
+        ...found,
+        properties: { ...found.properties },
+      };
+
+      const sourceId = LayerActions.findFeatureSourceId(map, found);
+      ActionSetData.setSelectedData(map, updated, sourceId);
+    }
   }
 }

@@ -27,7 +27,7 @@ export class ActionRemovePoint {
     const allFeatures = AppGlobals.getElements();
     const targetFeature = allFeatures.find((f) => f.id === parentId);
     if (!targetFeature) return;
-    console.log("featuresHandles[0]", featuresHandles[0]);
+
     this.targetPoint = featuresHandles[0];
     this.parentFeature = targetFeature;
   }

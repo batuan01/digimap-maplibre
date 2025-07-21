@@ -1,14 +1,15 @@
-import * as turf from "@turf/turf";
-import { ActionBoundingBox } from "./actionBoundingBox";
-import { isImageElement } from "../element/typeChecks";
-import { ActionHandleDragging } from "./actionHandleDragging";
-import { ActionLoadImage } from "./actionLoadImage";
 import { AppGlobals } from "@/lib/appGlobals";
-import { LayerActions } from "./actionLayer";
-import { Map, MapMouseEvent } from "maplibre-gl";
 import { FeatureCollectionType, FeatureType } from "@/types/featureTypes";
+import * as turf from "@turf/turf";
 import { Feature, Point, Position } from "geojson";
+import { Map, MapMouseEvent } from "maplibre-gl";
 import { getSourceElement } from "../element/getDataElement";
+import { isImageElement } from "../element/typeChecks";
+import { ActionBoundingBox } from "./actionBoundingBox";
+import { ActionHandleDragging } from "./actionHandleDragging";
+import { LayerActions } from "./actionLayer";
+import { ActionLoadImage } from "./actionLoadImage";
+import { ActionSetData } from "./actionSetData";
 
 export class ActionRotateElement {
   static handle: Feature<Point, { type: string }> | null = null;
@@ -16,16 +17,10 @@ export class ActionRotateElement {
   static center: Position | null = null;
   static polygonFeature: FeatureType | null = null;
   static map: Map | null = null;
-  static onUpdate: ((data: FeatureType) => void) | null = null;
 
-  static setup(
-    map: Map,
-    polygonFeature: FeatureType,
-    onUpdate: (data: FeatureType) => void
-  ) {
+  static setup(map: Map, polygonFeature: FeatureType) {
     this.map = map;
     this.polygonFeature = polygonFeature;
-    this.onUpdate = onUpdate;
     if (isImageElement(polygonFeature)) {
       const convertedFeature = ActionLoadImage.convertPoligon(polygonFeature);
       this.center = turf.centroid(convertedFeature).geometry.coordinates;
@@ -137,41 +132,13 @@ export class ActionRotateElement {
       !this.handle
     )
       return;
+
     const currentPoint = [e.lngLat.lng, e.lngLat.lat];
     const currentAngle = this.angleTo(currentPoint);
     const angleDelta = currentAngle - this.startAngle;
-
-    if (isImageElement(this.polygonFeature)) {
-      const convertedFeature = ActionLoadImage.convertPoligon(
-        this.polygonFeature
-      );
-      const rotatedCoords = turf.transformRotate(
-        convertedFeature,
-        -angleDelta,
-        { pivot: this.center }
-      );
-
-      const convertedImage = ActionLoadImage.convertImage(rotatedCoords);
-      this.polygonFeature.geometry.coordinates =
-        convertedImage.geometry.coordinates;
-    } else {
-      const rotated = turf.transformRotate(this.polygonFeature, -angleDelta, {
-        pivot: this.center,
-        mutate: false,
-      });
-      this.polygonFeature = rotated;
-    }
-
     this.startAngle = currentAngle;
 
-    const rotatedHandle = turf.transformRotate(this.handle, -angleDelta, {
-      pivot: this.center,
-      mutate: false,
-    });
-
-    this.handle = rotatedHandle;
-    this.updateHandle(rotatedHandle);
-    this.onUpdate?.(this.polygonFeature);
+    this.rotateByAngle(this.map, this.polygonFeature, angleDelta);
   };
 
   static onMouseUp = () => {
@@ -212,5 +179,58 @@ export class ActionRotateElement {
     const dx = point[0] - this.center[0];
     const dy = point[1] - this.center[1];
     return (Math.atan2(dy, dx) * 180) / Math.PI;
+  }
+
+  static rotateByAngle(
+    map: Map,
+    polygonFeature: FeatureType,
+    angleDelta: number
+  ) {
+    this.map = map;
+    this.polygonFeature = polygonFeature;
+    const sourceId = LayerActions.findFeatureSourceId(map, polygonFeature);
+
+    if (isImageElement(polygonFeature)) {
+      const convertedFeature = ActionLoadImage.convertPoligon(polygonFeature);
+      this.center = turf.centroid(convertedFeature).geometry.coordinates;
+    } else {
+      this.center = turf.centroid(polygonFeature).geometry.coordinates;
+    }
+
+    if (!this.polygonFeature || !this.center) return;
+
+    if (isImageElement(this.polygonFeature)) {
+      const convertedFeature = ActionLoadImage.convertPoligon(
+        this.polygonFeature
+      );
+      const rotatedCoords = turf.transformRotate(
+        convertedFeature,
+        -angleDelta,
+        {
+          pivot: this.center,
+        }
+      );
+      const convertedImage = ActionLoadImage.convertImage(rotatedCoords);
+      this.polygonFeature.geometry.coordinates =
+        convertedImage.geometry.coordinates;
+    } else {
+      const rotated = turf.transformRotate(this.polygonFeature, -angleDelta, {
+        pivot: this.center,
+        mutate: false,
+      });
+      this.polygonFeature = rotated;
+    }
+
+    if (this.handle) {
+      this.handle = turf.transformRotate(this.handle, -angleDelta, {
+        pivot: this.center,
+        mutate: false,
+      });
+      this.updateHandle(this.handle);
+    }
+
+    ActionSetData.setSelectedData(map, this.polygonFeature, sourceId);
+
+    return this.polygonFeature;
   }
 }

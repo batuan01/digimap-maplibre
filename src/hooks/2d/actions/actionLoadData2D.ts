@@ -137,7 +137,7 @@ export class ActionLoadData2D {
           source: sourceId,
           paint: {
             "fill-color": ["coalesce", ["get", "color"], "#787878"],
-            "fill-opacity": 0.4, // màu nền trong suốt
+            "fill-opacity": ["coalesce", ["get", "opacity"], 0.4], // màu nền trong suốt
           },
         },
         beforeLayerId
@@ -151,7 +151,7 @@ export class ActionLoadData2D {
           source: sourceId,
           paint: {
             "line-color": "#787878", // viền đen
-            "line-width": 4,
+            "line-width": ["coalesce", ["get", "stroke"], 4],
             "line-opacity": 1,
           },
         },

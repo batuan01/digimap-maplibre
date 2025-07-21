@@ -106,6 +106,7 @@ export class ActionSelectedElement2D {
 
       if (feature) {
         setSelectedElement(feature);
+        ActionBoundingBox.drawBoundingBox(feature, map, "selected");
         map.dragPan.disable();
       } else {
         setSelectedElement(null);
@@ -185,9 +186,7 @@ export class ActionSelectedElement2D {
         if (!(targetPolygon.geometry.type === "MultiLineString")) {
           ActionRotateElement.addHandle(map, targetPolygon);
 
-          ActionRotateElement.setup(map, feature, (rotated) => {
-            ActionSetData.setSelectedData(map, rotated, sourceId); // cập nhật lại vào source
-          });
+          ActionRotateElement.setup(map, feature);
         } else {
           ActionBoundingBox.clearBoundingBox(map, "selected");
           ActionBoundingBox.clearBoundingBox(map, "hover");

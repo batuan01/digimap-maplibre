@@ -1,0 +1,1114 @@
+.digimap {
+  --rem: 16;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    Segoe UI Symbol;
+  font-size: 12px;
+  --digimap-monospace-font-family: "Input Mono", Menlo, monospace;
+  --digimap-sansSerif-font-family: Inter, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif, emoji,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --digimap-sansSerifWithoutEmoji-font-family: Inter, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --digimap-label-font-size: 10px;
+  --digimap-labelLarge-font-size: 11px;
+  --digimap-base-font-size: 12px;
+  --digimap-heading-font-size: 13px;
+  --digimap-textLarge-font-size: 14px;
+  --digimap-tint-color: #0099ff;
+  --digimap-tintDark-color: #0088ff;
+  --digimap-tintExtraDark-color: #1188ff;
+  --digimap-tintDimmed-color: rgba(0, 153, 255, 0.1);
+  --digimap-tintGradientStart-color: rgba(0, 153, 255, 0.4);
+  --digimap-tintGradientEnd-color: rgba(0, 153, 255, 0.8);
+  --digimap-componentTint-color: #8855ff;
+  --digimap-componentTintDark-color: #7744ff;
+  --digimap-componentTintExtraDark-color: #7733ff;
+  --digimap-componentTintDimmed-color: rgba(136, 85, 255, 0.1);
+  --digimap-componentTintGradientStart-color: rgba(136, 85, 255, 0.4);
+  --digimap-componentTintGradientEnd-color: rgba(136, 85, 255, 0.8);
+  --digimap-componentTintDimmedDrag-color: rgba(136, 85, 255, 0.2);
+  --digimap-componentTintDimmedActive-color: rgba(136, 85, 255, 0.3);
+  --digimap-componentTintLight-color: #b89aff;
+  --digimap-errorTint-color: #ff3366;
+  --digimap-errorTintDimmed-color: rgba(255, 51, 102, 0.1);
+  --digimap-warningTint-color: #ffbb00;
+  --digimap-warningTintDimmed-color: rgba(255, 187, 0, 0.2);
+  --digimap-warningText-color: #ff9900;
+  --digimap-graphicTint-color: #6666ff;
+  --digimap-graphicTintDark-color: #6644ff;
+  --digimap-graphicTintDimmed-color: rgba(102, 102, 255, 0.15);
+  --digimap-graphicTintGradientStart-color: rgba(102, 102, 255, 0.4);
+  --digimap-graphicTintGradientEnd-color: rgba(102, 102, 255, 0.8);
+  --digimap-beta-color: #6666ff;
+  --digimap-panelTitle-color: #333333;
+  --digimap-panelRowTitle-color: #666666;
+  --digimap-panelSectionTitle-color: #999999;
+  --digimap-panelText-color: #666666;
+  --digimap-panelDescription-color: #999999;
+  --digimap-panelTextSelected-color: #ffffff;
+  --digimap-panelBackground-color: #ffffff;
+  --digimap-panelDivider-color: #eeeeee;
+  --digimap-panelSectionHeaderIcon-color: #444444;
+  --digimap-panelSectionHeaderIconForSites-color: #222222;
+  --digimap-panelChevron-color: #999999;
+  --digimap-panelSubtitle-color: #666666;
+  --digimap-panelPressedState-color: #666666;
+  --digimap-nuxPanelHeaderTitle-color: #222222;
+  --digimap-nuxPanelStepTitle-color: #666666;
+  --digimap-nuxPanelStepTitleDisabled-color: #999999;
+  --digimap-nuxPanelStepTitleHighlighted-color: #677680;
+  --digimap-nuxPanelStepNumberHighlighted-color: #1a303d;
+  --digimap-nuxPanelSubtitle-color: #999999;
+  --digimap-nuxPanelSubtitleDisabled-color: #cccccc;
+  --digimap-nuxPanelButton-color: #ffffff;
+  --digimap-nuxPanelButtonDisabled-color: #f2f2f2;
+  --digimap-nuxPanelCard-color: #fafafa;
+  --digimap-nuxPanelCheckmark-color: #aaaaaa;
+  --digimap-assetsRowCodeFileText-color: #0099ff;
+  --digimap-assetsRowCodeFileBackgroundSelected-color: rgba(0, 153, 255, 0.1);
+  --digimap-assetsRowCodeFileBackgroundDragged-color: rgba(0, 153, 255, 0.2);
+  --digimap-assetsRowCodeFileBackgroundDraggedUnsaturated-color: rgba(
+    238,
+    238,
+    238,
+    0.2
+  );
+  --digimap-colorIconBorder-color: rgba(0, 0, 0, 0.1);
+  --digimap-dropdownText-color: #999999;
+  --digimap-dropdownChevron-color: #999999;
+  --digimap-canvasCreatePreviewBorder-color: #0099ff;
+  --digimap-canvasSelectionRectBackground-color: rgba(0, 153, 255, 0.1);
+  --digimap-canvasSelectionRectBorder-color: rgba(0, 153, 255, 0.5);
+  --digimap-canvasTooltipText-color: #ffffff;
+  --digimap-canvasTooltipBackground-color: #0099ff;
+  --digimap-canvasBarBackground-color: rgba(0, 0, 0, 0.05);
+  --digimap-canvasBarBackgroundHighlighted-color: rgba(0, 153, 255, 0.1);
+  --digimap-canvasBarText-color: #333333;
+  --digimap-canvasRelativeOverlayBackdrop-color: rgba(0, 153, 255, 0.25);
+  --digimap-canvasRelativeOverlaySmartComponentBackdrop-color: rgba(
+    136,
+    85,
+    255,
+    0.15
+  );
+  --digimap-floatingWindowToolbarIcon-color: #999999;
+  --digimap-modalBackground-color: #ffffff;
+  --digimap-modalBackgroundTransparent-color: rgba(255, 255, 255, 0);
+  --digimap-modalSecondaryBackground-color: #fafafa;
+  --digimap-modalBackdrop-color: rgba(0, 0, 0, 0.4);
+  --digimap-modalTitle-color: #333333;
+  --digimap-modalSubtitle-color: #999999;
+  --digimap-modalDescription-color: #666666;
+  --digimap-modalForm-color: #999999;
+  --digimap-modalCloseIcon-color: #999999;
+  --digimap-largeModalTitle-color: #000000;
+  --digimap-largeModalDescription-color: #333333;
+  --digimap-variablesModalEmptyStateIcon-color: #aaaaaa;
+  --digimap-variableRowText-color: #666666;
+  --digimap-variableRowTextActive-color: #000000;
+  --digimap-variableRowDivider-color: #eeeeee;
+  --digimap-variableRowDividerSelected-color: #dddddd;
+  --digimap-modalTutorialRowHover-color: rgba(0, 0, 0, 0.04);
+  --digimap-cmsImportModalImageBackgroundColor-color: rgba(0, 153, 255, 0.1);
+  --digimap-cmsImportModalTextColor-color: #666666;
+  --digimap-buttonBackground-color: #f3f3f3;
+  --digimap-buttonBackgroundHover-color: #eeeeee;
+  --digimap-buttonBackgroundActive-color: #dddddd;
+  --digimap-buttonText-color: #333333;
+  --digimap-buttonBackgroundPrimary-color: #0099ff;
+  --digimap-buttonBackgroundPrimaryHover-color: #0088ff;
+  --digimap-buttonBackgroundPrimaryActive-color: #0077ff;
+  --digimap-buttonTextPrimary-color: #ffffff;
+  --digimap-buttonBackgroundDestructive-color: #ff3366;
+  --digimap-buttonBackgroundDestructiveHover-color: #ee2255;
+  --digimap-buttonBackgroundDestructiveActive-color: #dd1144;
+  --digimap-buttonTextDestructive-color: #ffffff;
+  --digimap-buttonCellBackground-color: #f3f3f3;
+  --digimap-buttonCellBackgroundHover-color: #eeeeee;
+  --digimap-buttonWithDepthText-color: #222222;
+  --digimap-buttonWithDepthTextDisabled-color: #cccccc;
+  --digimap-buttonWithDepthBackground-color: #ffffff;
+  --digimap-buttonWithDepthBackgroundDisabled-color: #f3f3f3;
+  --digimap-buttonWithDepthBackgroundHover-color: #fafafa;
+  --digimap-buttonWithDepthShadow-color: 0px 4px 8px 0px rgba(0, 0, 0, 0.12);
+  --digimap-buttonWithDepthPrimaryBackground-color: #0099ff;
+  --digimap-buttonWithDepthPrimaryBackgroundHover-color: #1188ff;
+  --digimap-buttonWithDepthPrimaryShadow-color: 0px 4px 8px 0px
+    rgba(0, 153, 255, 0.3);
+  --digimap-buttonWithDepthPrimaryShadowHover-color: 0px 4px 8px 0px
+    rgba(17, 136, 255, 0.3);
+  --digimap-buttonWithDepthPrimaryComponentShadow-color: 0px 4px 8px 0px
+    rgba(136, 85, 255, 0.3);
+  --digimap-buttonWithDepthPrimaryComponentShadowHover-color: 0px 4px 8px 0px
+    rgba(119, 51, 255, 0.3);
+  --digimap-buttonWithDepthPrimaryGraphicShadow-color: 0px 4px 8px 0px
+    rgba(102, 102, 255, 0.3);
+  --digimap-buttonWithDepthPrimaryGraphicShadowHover-color: 0px 4px 8px 0px
+    rgba(102, 102, 255, 0.3);
+  --digimap-buttonWithDepthDestructiveBackground-color: #ff3366;
+  --digimap-buttonWithDepthDestructiveBackgroundHover-color: #e15;
+  --digimap-buttonWithDepthDestructiveShadow-color: 0 4px 8px 0
+    rgba(255, 51, 102, 0.3);
+  --digimap-rowOverlayButtonBackground-color: #eeeeee;
+  --digimap-rowOverlayButtonBackgroundHover-color: #e3e3e3;
+  --digimap-rowOverlayButtonBackgroundActive-color: #dddddd;
+  --digimap-tabBarText-color: #888888;
+  --digimap-electronTabBarBackground-color: #f3f3f3;
+  --digimap-electronTabBarBackgroundActive-color: #ffffff;
+  --digimap-electronTabBarBorder-color: #e6e6e6;
+  --digimap-electronTabBarText-color: #888888;
+  --digimap-electronTabBarTextActive-color: #333333;
+  --digimap-inputBackground-color: #f3f3f3;
+  --digimap-inputBorder-color: transparent;
+  --digimap-inputBorderError-color: #ff3366;
+  --digimap-inputBorderActive-color: #0099ff;
+  --digimap-inputText-color: #333333;
+  --digimap-inputTextError-color: #ff3366;
+  --digimap-inputTextDisabled-color: #bbbbbb;
+  --digimap-inputTextDisabledSelected-color: #999999;
+  --digimap-inputPlaceholder-color: #999999;
+  --digimap-inputLabel-color: #999999;
+  --digimap-inputLabelDisabled-color: #dddddd;
+  --digimap-inputIcon-color: #999999;
+  --digimap-inputIconHover-color: #888888;
+  --digimap-inputIconDisabled-color: #bbbbbb;
+  --digimap-sitesSettingsInputLabel-color: #666666;
+  --digimap-sitesSettingsInputBackground-color: #f3f3f3;
+  --digimap-sitesSettingsInputBackgroundDisabled-color: #e6e6e6;
+  --digimap-sitesSettingsInputColorDisabled-color: #999999;
+  --digimap-comboBoxSectionText-color: #222222;
+  --digimap-iconPadlock-color: #bbbbbb;
+  --digimap-padLockConnector-color: #dddddd;
+  --digimap-popoverBackground-color: #ffffff;
+  --digimap-popoverDivider-color: #eeeeee;
+  --digimap-popoverDescription-color: #aaa;
+  --digimap-popupButtonBackground-color: #f3f3f3;
+  --digimap-popupButtonBorder-color: transparent;
+  --digimap-popupButtonText-color: #333333;
+  --digimap-popupButtonIcon-color: #888888;
+  --digimap-popupButtonIconDisabled-color: #bbbbbb;
+  --digimap-popupButtonPreviewIconBackground-color: #ffffff;
+  --digimap-popupButtonPreviewIconPrimary-color: #222222;
+  --digimap-popupButtonPreviewIconSecondary-color: #cccccc;
+  --digimap-popoutButtonTextPlaceholder-color: #999999;
+  --digimap-popoutButtonTextDisabled-color: #cccccc;
+  --digimap-popoutButtonCursorPlaceholder-color: #cccccc;
+  --digimap-popoutButtonCursorIconBackground-color: #dddddd;
+  --digimap-popoutButtonCursorIcon-color: rgba(0, 0, 0, 0.25);
+  --digimap-popoutButtonCursorBorder-color: rgba(0, 0, 0, 0.05);
+  --digimap-missingFontButtonText-color: #ffffff;
+  --digimap-missingFontButtonBackground-color: #ffaa00;
+  --digimap-radioButtonBackground-color: #dddddd;
+  --digimap-radioButtonBackgroundHover-color: #cccccc;
+  --digimap-radioButtonLabel-color: #333333;
+  --digimap-radioButtonDescription-color: #999999;
+  --digimap-radioButtonLabelDisabled-color: #cccccc;
+  --digimap-segmentedControlBackground-color: #f3f3f3;
+  --digimap-segmentedControlBackgroundDisabled-color: #f9f9f9;
+  --digimap-segmentedControlBorder-color: transparent;
+  --digimap-segmentedControlItemBackground-color: #f3f3f3;
+  --digimap-segmentedControlItemBackgroundActive-color: #eeeeee;
+  --digimap-segmentedControlItemBackgroundSelected-color: #ffffff;
+  --digimap-segmentedControlItemText-color: #999999;
+  --digimap-segmentedControlItemTextHover-color: #888888;
+  --digimap-segmentedControlItemTextSelected-color: #0099ff;
+  --digimap-segmentedControlItemTextSelectedHover-color: #0088ff;
+  --digimap-segmentedControlDivider-color: #e6e6e6;
+  --digimap-segmentedControlItemTextSelectedUnsaturated-color: #222222;
+  --digimap-sliderKnob-color: #ffffff;
+  --digimap-sliderTrack-color: #dddddd;
+  --digimap-sliderTrackActive-color: #0099ff;
+  --digimap-sliderTrackDisabled-color: #eeeeee;
+  --digimap-spinnerBackground-color: #000000;
+  --digimap-presetIcon-color: #222222;
+  --digimap-presetSelectedColor-color: #000000;
+  --digimap-presetSelectedBackground-color: #f3f3f3;
+  --digimap-alternativePresetIcon-color: #0099ff;
+  --digimap-alternativePresetSelectedColor-color: #0099ff;
+  --digimap-alternativePresetSelectedBackground-color: rgba(0, 153, 255, 0.1);
+  --digimap-gradientStopSliderBorder-color: rgba(0, 0, 0, 0.05);
+  --digimap-formRedirectLinkIcon-color: #cccccc;
+  --digimap-colorStyleBorder-color: #000000;
+  --digimap-colorStyleDisabled-color: rgba(0, 0, 0, 0.04);
+  --digimap-maskEmptyGradientStop1-color: #f3f3f3;
+  --digimap-maskEmptyGradientStop2-color: #cccccc;
+  --digimap-swatchBorder-color: rgba(0, 0, 0, 0.1);
+  --digimap-swatchBorderPlaceholder-color: rgba(0, 0, 0, 0.05);
+  --digimap-swatchBackgroundPlaceholderForFill-color: #ffffff;
+  --digimap-swatchBackgroundPlaceholderForBorder-color: #cccccc;
+  --digimap-swatchBackgroundPlaceholderForLink-color: #cccccc;
+  --digimap-swatchBackgroundPlaceholderForShadow-color: rgba(
+    221,
+    221,
+    221,
+    0.5
+  );
+  --digimap-checkboxBackground-color: #dddddd;
+  --digimap-checkboxBackgroundActive-color: #cccccc;
+  --digimap-checkboxBackgroundChecked-color: #0099ff;
+  --digimap-checkboxBackgroundCheckedActive-color: #0088ff;
+  --digimap-checkboxLabel-color: #333333;
+  --digimap-checkboxLabelDisabled-color: #cccccc;
+  --digimap-checkboxStroke-color: #ffffff;
+  --digimap-moreInfoText-color: #333333;
+  --digimap-moreInfoDisclosureIcon-color: #aaaaaa;
+  --digimap-toggleBackground-color: #eeeeee;
+  --digimap-toggleBackgroundChecked-color: #0099ff;
+  --digimap-toggleBackgroundDisabled-color: #f3f3f3;
+  --digimap-toggleTack-color: linear-gradient(0deg, #fafafa 0%, #ffffff 100%);
+  --digimap-toggleTackDisabled-color: #ffffff;
+  --digimap-toggleTackBorder-color: rgba(0, 0, 0, 0.05);
+  --digimap-toggleTackBorderDisabled-color: transparent;
+  --digimap-codeEditorBackground-color: #fdfdfd;
+  --digimap-toolbarIcon-color: #888888;
+  --digimap-toolbarIconHover-color: #777777;
+  --digimap-toolbarIconActive-color: #0099ff;
+  --digimap-toolbarTitleText-color: #888888;
+  --digimap-toolbarInputText-color: #333333;
+  --digimap-animationForground-color: #ffffff;
+  --digimap-animationForgroundDimmed-color: #4faeff;
+  --digimap-animationForgroundLight-color: #7fc3ff;
+  --digimap-animationBackgroundLight-color: rgba(255, 255, 255, 0.2);
+  --digimap-animationNavigationTargetFrame-color: #ffffff;
+  --digimap-animationNavigationTargetFrameSelected-color: #eaf4ff;
+  --digimap-textAreaScrollbar-color: #cccccc;
+  --digimap-toolbarButtonBackground-color: #f3f3f3;
+  --digimap-toolbarButtonBackgroundActive-color: #333333;
+  --digimap-toolbarButtonBackgroundWarning-color: rgba(255, 170, 0, 0.2);
+  --digimap-toolbarButtonBackgroundWarningActive-color: rgba(255, 170, 0, 0.3);
+  --digimap-toolbarButtonBackgroundError-color: rgba(255, 51, 85, 0.1);
+  --digimap-toolbarButtonBackgroundErrorActive-color: rgba(255, 51, 85, 0.2);
+  --digimap-toolbarButtonText-color: #666666;
+  --digimap-toolbarButtonTextWarning-color: #ffaa00;
+  --digimap-toolbarButtonTextError-color: #ff3355;
+  --digimap-toolbarButtonTextActive-color: #ffffff;
+  --digimap-toolbarButtonTextSites-color: #888888;
+  --digimap-toolbarButtonIconSites-color: #888888;
+  --digimap-toolbarButtonTextActiveSites-color: #222222;
+  --digimap-toolbarButtonBackgroundActiveSites-color: #f3f3f3;
+  --digimap-toolbarButtonBackgroundTintedSites-color: rgba(0, 153, 255, 0.1);
+  --digimap-toolbarPreviewCloseButtonSites-color: #888888;
+  --digimap-toolbarSettingsButtonTextSites-color: #333333;
+  --digimap-toolbarSettingsButtonTextSecondarySites-color: #999999;
+  --digimap-toolbarSettingsButtonBackgroundSites-color: #f3f3f3;
+  --digimap-toolbarSettingsButtonTextActiveSites-color: #ffffff;
+  --digimap-toolbarSettingsButtonBackgroundActiveSites-color: #222222;
+  --digimap-toolbarInviteBadgeBackgroundHover-color: #e3e3e3;
+  --digimap-breadcrumbItemText-color: #888888;
+  --digimap-breadcrumbItemBackground-color: rgba(0, 0, 0, 0.05);
+  --digimap-breadcrumbOverlayPlayButton-color: #ad89ff;
+  --digimap-breadcrumbGraphicOverlayPlayButton-color: rgba(255, 255, 255, 0.3);
+  --digimap-contextMenuButtonBackgroundHover-color: #f2f2f2;
+  --digimap-contextMenuButtonIcon-color: #999999;
+  --digimap-contextMenuButtonIconHover-color: #333333;
+  --digimap-pageRowTextActive-color: #000000;
+  --digimap-pageRowBackgroundActive-color: #f3f3f3;
+  --digimap-pageIconSelected-color: #222222;
+  --digimap-pageContextMenuButtonIconHover-color: #222222;
+  --digimap-pageFolderIconFill-color: rgba(153, 153, 153, 0.15);
+  --digimap-layerItemTextDimmed-color: rgba(102, 102, 102, 0.8);
+  --digimap-layerItemTextInactive-color: rgba(0, 0, 0, 0.5);
+  --digimap-layerItemTextInactiveSelected-color: rgba(255, 255, 255, 0.5);
+  --digimap-layerItemIcon-color: #999999;
+  --digimap-layerItemIconDimmed-color: #9aacc0;
+  --digimap-layerItemIconComponentDimmed-color: #86829a;
+  --digimap-layerItemIconGraphicDimmed-color: #9aacc0;
+  --digimap-layerItemIconInactive-color: rgba(187, 187, 187, 0.5);
+  --digimap-layerItemIconInactiveSelected-color: rgba(187, 187, 187, 0.5);
+  --digimap-layerItemPlaceholderText-color: #999999;
+  --digimap-layerItemComponentLabel-color: #aaaaaa;
+  --digimap-layerItemComponentLabelSelected-color: #ffffff;
+  --digimap-codePanelNoSearchResults-color: #999999;
+  --digimap-layoutPinBackground-color: #bbbbbb;
+  --digimap-canvasBackground-color: #eeeeee;
+  --digimap-canvasComponentOverlayEditModeBackground-color: #e8ddff;
+  --digimap-canvasComponentGraphicOverlayEditModeBackground-color: #e0e0ff;
+  --digimap-canvasFrameTitle-color: #bbbbbb;
+  --digimap-canvasFrameOutline-color: #cccccc;
+  --digimap-canvasFramePreview-color: rgba(0, 0, 0, 0.03);
+  --digimap-canvasFramePreviewOutline-color: rgba(0, 0, 0, 0.1);
+  --digimap-canvasConnectionLine-color: #bbbbbb;
+  --digimap-canvasArrowInactive-color: #cccccc;
+  --digimap-canvasSuggestionOutline-color: rgba(0, 0, 0, 0.05);
+  --digimap-canvasSuggestionBackground-color: rgba(0, 0, 0, 0.04);
+  --digimap-canvasSuggestionText-color: #999999;
+  --digimap-canvasOverlayTriggerOutline-color: rgba(0, 153, 255, 0.5);
+  --digimap-canvasOverlayTriggerBackground-color: rgba(0, 153, 255, 0.2);
+  --digimap-canvasComponentOverlayTriggerOutline-color: rgba(136, 85, 255, 0.4);
+  --digimap-canvasComponentOverlayTriggerBackground-color: rgba(
+    136,
+    85,
+    255,
+    0.2
+  );
+  --digimap-rulerBackground-color: #e5e5e5;
+  --digimap-rulerBorderColor-color: #dddddd;
+  --digimap-rulerTickColor-color: #cccccc;
+  --digimap-rulerTextColor-color: #aaaaaa;
+  --digimap-rulerFadeOut-color: rgba(229, 229, 229, 0);
+  --digimap-rulerComponentOverlayEditModeBackground-color: #dfceff;
+  --digimap-rulerComponentOverlayEditModeBorderColor-color: rgba(
+    136,
+    85,
+    255,
+    0.1
+  );
+  --digimap-rulerComponentOverlayEditModeTextColor-color: rgb(136, 85, 255);
+  --digimap-rulerComponentOverlayEditModeTickColor-color: rgb(136, 85, 255);
+  --digimap-rulerComponentOverlayEditModeFadeOut-color: rgba(136, 85, 255, 0);
+  --digimap-rulerComponentGraphicOverlayEditModeBackground-color: #d3d3fe;
+  --digimap-rulerComponentGraphicOverlayEditModeBorderColor-color: rgba(
+    102,
+    102,
+    255,
+    0.15
+  );
+  --digimap-rulerComponentGraphicOverlayEditModeTextColor-color: #6666ff;
+  --digimap-rulerComponentGraphicOverlayEditModeTickColor-color: #6666ff;
+  --digimap-rulerComponentGraphicOverlayEditModeFadeOut-color: rgba(
+    211,
+    211,
+    254,
+    0
+  );
+  --digimap-guideColor-color: #00e4f5;
+  --digimap-guideHighlightColor-color: #0099ff;
+  --digimap-guideComponentHighlightColor-color: #8855ff;
+  --digimap-guideComponentGraphicOverlayEditModeHighlightColor-color: #6666ff;
+  --digimap-selectionBox-color: rgba(125, 125, 125, 0.03);
+  --digimap-selectionBoxOutline-color: rgba(125, 125, 125, 0.3);
+  --digimap-selectionBoxBackground-color: rgba(0, 153, 255, 0.2);
+  --digimap-selectionBoxComponentBackground-color: rgba(136, 85, 255, 0.2);
+  --digimap-snapLine-color: #ff5aaa;
+  --digimap-snapConstraint-color: #ffd700;
+  --digimap-textEditorOutline-color: #cccccc;
+  --digimap-error-color: #ee4444;
+  --digimap-errorText-color: #ffffff;
+  --digimap-fatalErrorText-color: #000000;
+  --digimap-codeExportPanelFadeOut-color: rgba(255, 255, 255, 0);
+  --digimap-codeExportPanelSelection-color: rgba(229, 229, 229, 0.99);
+  --digimap-codeExportChipBackground-color: rgba(255, 215, 6, 0.16);
+  --digimap-codePreviewBackground-color: #f3f3f3;
+  --digimap-codePreviewBackgroundFadeOut-color: rgba(243, 243, 243, 0);
+  --digimap-fontFamilyGoogleIcon-color: #dddddd;
+  --digimap-fontFamilyGoogleIconHover-color: #999999;
+  --digimap-previewConsoleBackground-color: #f4f4f4;
+  --digimap-previewConsoleButtonText-color: #999999;
+  --digimap-previewConsoleDivider-color: rgba(221, 221, 221, 0.5);
+  --digimap-previewConsoleCollapseIcon-color: #bbbbbb;
+  --digimap-previewSpinnerBackground-color: #000000;
+  --digimap-previewCloseIconBackground-color: rgba(0, 0, 0, 0.05);
+  --digimap-previewCloseIconBackgroundHover-color: rgba(0, 0, 0, 0.08);
+  --digimap-previewCloseIconColor-color: rgba(0, 0, 0, 0.55);
+  --digimap-previewEmptyDocumentText-color: #888888;
+  --digimap-previewDeviceColorDotInnerBorder-color: rgba(0, 0, 0, 0.1);
+  --digimap-previewResizeHandles-color: rgba(0, 0, 0, 0.1);
+  --digimap-previewResizeHandlesHover-color: rgba(0, 0, 0, 0.15);
+  --digimap-sharedPreviewStatusText-color: #999999;
+  --digimap-sharedPreviewBackground-color: #ffffff;
+  --digimap-sharedPreviewMobileQRBackground-color: #f3f3f3;
+  --digimap-sharedPreviewMobileQR-color: #000000;
+  --digimap-tooltipBackground-color: #999999;
+  --digimap-tooltipIcon-color: #bbbbbb;
+  --digimap-tooltipBackdrop-color: rgba(0, 0, 0, 0.1);
+  --digimap-tooltipInsert-color: #ffffff;
+  --digimap-badgeBackground-color: rgba(0, 153, 255, 0.15);
+  --digimap-warningBadgeBackground-color: rgba(255, 170, 0, 0.15);
+  --digimap-neutralBadgeBackground-color: rgba(102, 102, 102, 0.1);
+  --digimap-neutralBadgeColor-color: #666666;
+  --digimap-timeBadgeBackground-color: rgba(170, 170, 170, 0.15);
+  --digimap-betaBadgeBackground-color: rgba(102, 102, 255, 0.15);
+  --digimap-betaBadgeLightBackground-color: #ffffff;
+  --digimap-alphaBadgeBackground-color: rgba(255, 170, 0, 0.2);
+  --digimap-alphaBadgeText-color: #ffaa00;
+  --digimap-inactiveAvatarBackground-color: #888888;
+  --digimap-feedbackSidebarBackground-color: #ffffff;
+  --digimap-feedbackPrimaryText-color: #333333;
+  --digimap-feedbackSecondaryText-color: #999999;
+  --digimap-feedbackTertiaryText-color: #666666;
+  --digimap-feedbackFormButtonBackground-color: #f3f3f3;
+  --digimap-feedbackFormButtonFill-color: #888888;
+  --digimap-feedbackFormButtonSubmitFocus-color: #0066ff;
+  --digimap-feedbackFormButtonFocus-color: #eeeeee;
+  --digimap-feedbackFormBackground-color: #ffffff;
+  --digimap-feedbackFormPlaceholder-color: #bbbbbb;
+  --digimap-feedbackDivider-color: #eeeeee;
+  --digimap-feedbackLabelBackground-color: #f5f5f5;
+  --digimap-feedbackHasRepliesBackground-color: rgba(0, 153, 255, 0.1);
+  --digimap-feedbackDisclosureBackground-color: #f5f5f5;
+  --digimap-feedbackDisclosureFill-color: #999999;
+  --digimap-emptyStateIcon-color: #999999;
+  --digimap-emptyStateCardBackground-color: #f5f5f5;
+  --digimap-emptyStateBodyText-color: #666666;
+  --digimap-emptyStateBodyTextForSites-color: #999999;
+  --digimap-emptyStateInputShape-color: #f7f7f7;
+  --digimap-emptyStateTextShape-color: #f3f3f3;
+  --digimap-errorStateIconColor-color: #999999;
+  --digimap-errorStateCodeText-color: #666666;
+  --digimap-errorStateCodeBackground-color: #f5f5f5;
+  --digimap-errorStateTitleText-color: #333333;
+  --digimap-errorStateDescriptionText-color: #666666;
+  --digimap-dashboardHeadingLink-color: #888888;
+  --digimap-dashboardHeadingLinkHover-color: #333333;
+  --digimap-dashboardItemIcon-color: #333333;
+  --digimap-dashboardSearchPlaceholder-color: #999999;
+  --digimap-dashboardMoreButtonIcon-color: #999999;
+  --digimap-dashboardEmptyState-color: #fafafa;
+  --digimap-dashboardEmptyStateTitle-color: #666666;
+  --digimap-dashboardEmptyStateSubtitle-color: #999999;
+  --digimap-dashboardCardInfoText-color: #333333;
+  --digimap-dashboardCardInfoSpanText-color: rgba(0, 0, 0, 0.3);
+  --digimap-dashboardContentBackground-color: #f3f3f3;
+  --digimap-nonFullWidthDashboardContentBackground-color: #ffffff;
+  --digimap-dashboardPlaceholderLogo-color: #eeeeee;
+  --digimap-dashboardCustomThumbnailButton-color: rgba(0, 0, 0, 0.05);
+  --digimap-dashboardCustomThumbnailButtonHover-color: rgba(0, 0, 0, 0.07);
+  --digimap-dashboardCustomThumbnailButtonActive-color: rgba(0, 0, 0, 0.09);
+  --digimap-dashboardSearchWorkspaceTitle-color: #333333;
+  --digimap-dashboardSearchWorkspaceTag-color: #999999;
+  --digimap-dashboardSidebarBackground-color: #ffffff;
+  --digimap-dashboardSidebarTitle-color: #333333;
+  --digimap-dashboardSidebarText-color: #666666;
+  --digimap-dashboardSidebarTextDimmed-color: #aaaaaa;
+  --digimap-dashboardSidebarTextHover-color: #444444;
+  --digimap-dashboardSidebarDivider-color: #eeeeee;
+  --digimap-dashboardSidebarActions-color: #666666;
+  --digimap-dashboardSidebarJoinTeamButton-color: #eeeeee;
+  --digimap-dashboardSidebarJoinTeamButtonHover-color: #e6e6e6;
+  --digimap-dashboardSidebarUpgradeCardBackground-color: #eeeeee;
+  --digimap-dashboardSidebarUpgradeCardText-color: #666666;
+  --digimap-dashboardSidebarActive-color: #222222;
+  --digimap-dashboardSidebarActiveBackground-color: #eeeeee;
+  --digimap-dashboardSidebarDismissIcon-color: #666666;
+  --digimap-dashboardSidebarBorder-color: #eeeeee;
+  --digimap-dashboardTopBarBackground-color: #ffffff;
+  --digimap-dashboardTopBarBorder-color: #eeeeee;
+  --digimap-badgeFreeWorkspaceBackground-color: rgba(136, 136, 136, 0.15);
+  --digimap-badgeFreeWorkspaceText-color: #888888;
+  --digimap-badgeLiteWorkspaceBackground-color: rgba(136, 136, 136, 0.15);
+  --digimap-badgeLiteWorkspaceText-color: #888888;
+  --digimap-badgeBasicWorkspaceBackground-color: rgba(0, 153, 255, 0.15);
+  --digimap-badgeBasicWorkspaceText-color: #0099ff;
+  --digimap-badgeProWorkspaceBackground-color: rgba(0, 102, 255, 0.15);
+  --digimap-badgeProWorkspaceText-color: #0066ff;
+  --digimap-badgeEnterpriseWorkspaceBackground-color: rgba(136, 136, 136, 0.15);
+  --digimap-badgeEnterpriseWorkspaceText-color: #888888;
+  --digimap-badgeLegacyWorkspaceBackground-color: rgba(136, 136, 136, 0.15);
+  --digimap-badgeLegacyWorkspaceText-color: #888888;
+  --digimap-customSearchBackground-color: #f3f3f3;
+  --digimap-customSearchText-color: #999999;
+  --digimap-customSearchIcon-color: #999999;
+  --digimap-customSearchTextWhileTyping-color: #000000;
+  --digimap-dashboardLearnPlayBackground-color: #ffffff;
+  --digimap-dashboardLearnPlayIcon-color: #000000;
+  --digimap-dashboardLearnTitle-color: #000000;
+  --digimap-dashboardNewProjectModalDivider-color: #eeeeee;
+  --digimap-dashboardNewProjectModalTitle-color: #333333;
+  --digimap-dashboardNewProjectCardModalBackground-color: #ffffff;
+  --digimap-dashboardNewProjectCardModalBackgroundBlank-color: #f7f7f7;
+  --digimap-dashboardNewProjectModalCardContent-color: #666666;
+  --digimap-dashboardInfoBannerColor-color: #333333;
+  --digimap-dashboardInfoBannerBackground-color: #f3f3f3;
+  --digimap-dashboardInfoBannerButton-color: #ffffff;
+  --digimap-dashboardInfoBannerButtonHover-color: #fafafa;
+  --digimap-upgradeFromDashboardLinkHover-color: #f6f6f6;
+  --digimap-settingsModalBackground-color: #ffffff;
+  --digimap-settingsModalTeamMemberRole-color: #666666;
+  --digimap-settingsModalTeamSearchIcon-color: #666666;
+  --digimap-settingsModalTeamRegenerateLinkIcon-color: #666666;
+  --digimap-settingsModalText-color: #666666;
+  --digimap-settingsModalTextDimmed-color: #888888;
+  --digimap-settingsModalDivider-color: #f3f3f3;
+  --digimap-settingsModalLabel-color: #333333;
+  --digimap-settingsModalNavigationLink-color: #666666;
+  --digimap-settingsModalNavigationLinkHover-color: #666666;
+  --digimap-settingsModalTitle-color: #000000;
+  --digimap-settingsModalPlanEmptyEditorsAvatar-color: #f3f3f3;
+  --digimap-settingsModalPlanEmptyEditorsAvatarText-color: #666666;
+  --digimap-settingsModalPlanCardBackground-color: #f3f3f3;
+  --digimap-settingsModalFontDeleteIcon-color: #666666;
+  --digimap-settingsModalTeamSearchFilterButtonActiveBackground-color: #333333;
+  --digimap-settingsModalTeamSearchFilterButtonActiveText-color: #ffffff;
+  --digimap-settingsModalTeamSearchFilterTagBackground-color: #f5f5f5;
+  --digimap-settingsModalTeamSearchFilterTagText-color: #333333;
+  --digimap-settingsModalPlansEditorsCount-color: #999999;
+  --digimap-settingsModalPlanMoreButton-color: #888888;
+  --digimap-settingsModalTitleBorder-color: #eeeeee;
+  --digimap-settingsModalBillingDetails-color: #999999;
+  --digimap-settingsModalRemoveAvatarButton-color: #ffffff;
+  --digimap-settingsModalSessionsIcons-color: #cccccc;
+  --digimap-settingsHeaderText-color: #999999;
+  --digimap-activeAccountSettingsLink-color: #333333;
+  --digimap-activeAccountSettingsBackground-color: #eeeeee;
+  --digimap-organizationTextDimmed-color: #666666;
+  --digimap-organizationMemberRowHover-color: #fafafa;
+  --digimap-organizationMemberDetailBackButton-color: #333333;
+  --digimap-organizationMemberDetailSubtitle-color: #333333;
+  --digimap-organizationInviteRoleMenu-color: #333333;
+  --digimap-organizationMemberName-color: #333333;
+  --digimap-organizationNoteBackground-color: #f3f3f3;
+  --digimap-organizationDetailTitle-color: #333333;
+  --digimap-confirmationModalDescription-color: #666666;
+  --digimap-insertPanelPrimaryIcon-color: #222222;
+  --digimap-insertPanelPrimaryIconShadow-color: rgba(34, 34, 34, 0.2);
+  --digimap-insertPanelSecondaryIcon-color: #ffffff;
+  --digimap-insertPanelSecondaryIconShadow-color: rgba(0, 0, 0, 0.1);
+  --digimap-insertPanelBasicsIcon-color: #222222;
+  --digimap-insertPanelCMSIcon-color: #ffffff;
+  --digimap-insertPanelCreativeIcon-color: #ffffff;
+  --digimap-insertPanelPinkIcon-color: #ff4488;
+  --digimap-insertPanelPinkIconShadow-color: rgba(255, 68, 136, 0.2);
+  --digimap-insertPanelOrangeIcon-color: #ff8822;
+  --digimap-insertPanelOrangeIconShadow-color: rgba(255, 136, 34, 0.2);
+  --digimap-insertPanelYellowIcon-color: #ffbb00;
+  --digimap-insertPanelYellowIconShadow-color: rgba(255, 187, 0, 0.2);
+  --digimap-insertPanelTurquoiseIcon-color: #44dddd;
+  --digimap-insertPanelTurquoiseIconShadow-color: rgba(68, 221, 221, 0.2);
+  --digimap-insertPanelCyanIcon-color: #3accff;
+  --digimap-insertPanelCyanIconShadow-color: rgba(58, 204, 255, 0.2);
+  --digimap-insertPanelTintBlueIcon-color: #38aaff;
+  --digimap-insertPanelTintBlueIconShadow-color: rgba(56, 170, 255, 0.2);
+  --digimap-insertPanelCobaltIcon-color: #3666ff;
+  --digimap-insertPanelCobaltIconShadow-color: rgba(54, 102, 255, 0.2);
+  --digimap-insertPanelRedIcon-color: #ff4444;
+  --digimap-insertPanelRedIconShadow-color: rgba(255, 68, 68, 0.2);
+  --digimap-insertPanelEmptyStateIconBackground-color: #f3f3f3;
+  --digimap-insertPanelEmptyStateIconForeground-color: #bbbbbb;
+  --digimap-insertPanelTutorialVideoTitle-color: #222222;
+  --digimap-insertPanelDocumentationLink-color: #222222;
+  --digimap-insertPanelCategoryGradientBackground-color: linear-gradient(
+    90deg,
+    rgba(0, 153, 255, 0.1) 0%,
+    rgba(136, 85, 255, 0.1) 100%
+  );
+  --digimap-insertPanelGridItem-color: #f3f3f3;
+  --digimap-dashboardTableBodyText-color: #333333;
+  --digimap-toastBackground-color: #ffffff;
+  --digimap-toastBackgroundPrimary-color: #0099ff;
+  --digimap-toastIcon-color: #888888;
+  --digimap-toastText-color: #333333;
+  --digimap-toastTextPrimary-color: #ffffff;
+  --digimap-toastBackgroundSites-color: #ffffff;
+  --digimap-toastTextSites-color: #444444;
+  --digimap-toastSecondaryTextSites-color: #888888;
+  --digimap-toastIconSites-color: #0099ff;
+  --digimap-toastButtonBackgroundProminent-color: #ffffff;
+  --digimap-toastButtonBackgroundProminentHover-color: rgba(255, 255, 255, 0.9);
+  --digimap-expiredTrialBanner-color: #ffffff;
+  --digimap-stylesPresetsIconBackground-color: #cccccc;
+  --digimap-stylesPresetsIconText-color: #ffffff;
+  --digimap-stylesPresetsButtonBackground-color: #e3e3e3;
+  --digimap-stylesPresetsButtonBackgroundHover-color: #dddddd;
+  --digimap-shortcutsModalListTitle-color: #999999;
+  --digimap-shortcutsModalActionButton-color: #888888;
+  --digimap-shortcutsModalDivider-color: #eeeeee;
+  --digimap-shortcutsModalKeyBackground-color: #f3f3f3;
+  --digimap-loaderPrimary-color: #ebebeb;
+  --digimap-loaderSecondary-color: #eeeeee;
+  --digimap-upsellCTAText-color: #ffffff;
+  --digimap-upsellCTAButtonBackground-color: #ffffff;
+  --digimap-upsellCTAButtonBackgroundHover-color: #eeeeee;
+  --digimap-teamCreationModalBackground-color: #ffffff;
+  --digimap-teamCreationCloseIcon-color: #888888;
+  --digimap-teamCreationText-color: #333333;
+  --digimap-teamCreationTextDimmed-color: #666666;
+  --digimap-teamCreationNavigation-color: #dddddd;
+  --digimap-teamCreationNavigationActive-color: #0099ff;
+  --digimap-teamCreationBenefitIcon-color: #0099ff;
+  --digimap-teamCreationBenefitDivider-color: #eeeeee;
+  --digimap-errorBoundaryDescription-color: #999999;
+  --digimap-highlightsBorder-color: #0099ff;
+  --digimap-highlightsBackground-color: rgba(0, 153, 255, 0.2);
+  --digimap-statusBarCustomerBetaBackground-color: #6666ff;
+  --digimap-statusBarCustomerBetaText-color: #ffffff;
+  --digimap-statusBarTunnelText-color: #ffffff;
+  --digimap-statusBarTunnelBackground-color: #ff8822;
+  --digimap-statusBarProductionTunnelBackground-color: #ff2424;
+  --digimap-statusBarEmployeeBetaBackground-color: #fdfdfd;
+  --digimap-statusBarEmployeeBetaText-color: #333333;
+  --digimap-statusBarPreviewLinkBackground-color: linear-gradient(
+    90deg,
+    rgba(0, 238, 255, 1) 0%,
+    rgba(0, 51, 255, 1) 100%
+  );
+  --digimap-statusBarPreviewLinkText-color: #ffffff;
+  --digimap-statusBarStableBackground-color: #22cc88;
+  --digimap-statusBarStableText-color: #ffffff;
+  --digimap-userTestButtonBackground-color: #f3f3f3;
+  --digimap-userTestButtonBackgroundHover-color: #eeeeee;
+  --digimap-userTestText-color: #666666;
+  --digimap-userTestDivider-color: #eeeeee;
+  --digimap-informationIcon-color: #cccccc;
+  --digimap-stackGapHandleTint-color: #ff00f5;
+  --digimap-stackGapHandleBackground-color: rgba(255, 0, 245, 0.05);
+  --digimap-stackItemHighlight-color: rgba(0, 153, 255, 0.2);
+  --digimap-publishHostname-color: #666;
+  --digimap-publishHostnameHover-color: #333;
+  --digimap-publishDescription-color: #aaa;
+  --digimap-publishDescriptionHover-color: #888;
+  --digimap-publishWarning-color: #ffaa22;
+  --digimap-publishWarningHover-color: #ff9900;
+  --digimap-publishPopoverDivider-color: #eeeeee;
+  --digimap-publishChangeLogTitleLoading-color: #999999;
+  --digimap-publishPopoverInfoCardBackground-color: #f3f3f3;
+  --digimap-aiDomainPopoverTitle-color: #333333;
+  --digimap-aiDomainPopoverBodyText-color: #666666;
+  --digimap-settingsText-color: #333333;
+  --digimap-settingsDescription-color: #666666;
+  --digimap-settingsWarning-color: #ffaa01;
+  --digimap-settingsContainerBackground-color: #ffffff;
+  --digimap-settingsContainerBorder-color: rgba(0, 0, 0, 0.05);
+  --digimap-settingsContainerTitle-color: #222222;
+  --digimap-settingsGridBorder-color: #eeeeee;
+  --digimap-settingsGridTitle-color: #666666;
+  --digimap-settingsGridContent-color: #333333;
+  --digimap-settingsGridDescription-color: #999999;
+  --digimap-settingsPlaceholder-color: #bbbbbb;
+  --digimap-settingsImageBackground-color: #ffffff;
+  --digimap-settingsImagePreviewBorder-color: rgba(34, 34, 34, 0.1);
+  --digimap-settingsImageClearButtonBackground-color: #bbbbbb;
+  --digimap-settingsSearchResultPreviewBorder-color: #eeeeee;
+  --digimap-settingsSearchResultPreviewTitle-color: #1a0dab;
+  --digimap-settingsSearchResultPreviewDescription-color: #333333;
+  --digimap-settingsSearchResultPreviewDomain-color: #666666;
+  --digimap-settingsFormsSectionDescription-color: #999999;
+  --digimap-settingsFormsUsageDescription-color: #666666;
+  --digimap-dnsTableHeaderBackground-color: #f3f3f3;
+  --digimap-dnsTableHeaderText-color: #333333;
+  --digimap-dnsTableBorder-color: #eeeeee;
+  --digimap-dnsTableText-color: #666666;
+  --digimap-dnsTableIcon-color: #999999;
+  --digimap-breakpointTitle-color: #999999;
+  --digimap-breakpointTitleBackground-color: rgba(153, 153, 153, 0.1);
+  --digimap-breakpointTitleBackgroundPrimary-color: rgba(0, 153, 255, 0.1);
+  --digimap-breakpointPlayButtonBackground-color: #999999;
+  --digimap-breakpointCreationButtonBackground-color: rgba(153, 153, 153, 0.15);
+  --digimap-breakpointCreationButtonBackgroundPrimary-color: rgba(
+    0,
+    153,
+    255,
+    0.15
+  );
+  --digimap-breakpointCreationButtonIcon-color: #999999;
+  --digimap-breakpointCreationButtonBackgroundActive-color: #0099ff;
+  --digimap-breakpointCreationButtonIconActive-color: #ffffff;
+  --digimap-analyticsNumberText-color: #111111;
+  --digimap-analyticsBarFill-color: #f3f3f3;
+  --digimap-analyticsGridLine-color: #eeeeee;
+  --digimap-analyticsLastUpdatedText-color: #999999;
+  --digimap-analyticsText-color: #666666;
+  --digimap-analyticsTableIcon-color: #666666;
+  --digimap-analyticsTooltipCircleStroke-color: #ffffff;
+  --digimap-sitePlansCopy-color: #666666;
+  --digimap-sitePlansHighlight-color: #000000;
+  --digimap-plansSelectedCard-color: #fafafa;
+  --digimap-plansInfoFrameBorder-color: #eeeeee;
+  --digimap-plansBannerText-color: #333333;
+  --digimap-plansCardTitle-color: #333333;
+  --digimap-plansLineItemDescription-color: #999999;
+  --digimap-plansCtaDisabled-color: #cccccc;
+  --digimap-plansCollaborators-color: #fafafa;
+  --digimap-plansPlusIcon-color: #cccccc;
+  --digimap-freeSiteColor-color: #888888;
+  --digimap-freeSiteBackground-color: rgba(136, 136, 136, 0.1);
+  --digimap-freeSiteFocus-color: #777777;
+  --digimap-miniSiteColor-color: #00ccff;
+  --digimap-miniSiteBackground-color: rgba(0, 204, 255, 0.1);
+  --digimap-miniSiteFocus-color: #00bbff;
+  --digimap-basicSiteColor-color: #0099ff;
+  --digimap-basicSiteBackground-color: rgba(0, 153, 255, 0.1);
+  --digimap-basicSiteFocus-color: #0088ff;
+  --digimap-proSiteColor-color: #0066ff;
+  --digimap-proSiteBackground-color: rgba(0, 102, 255, 0.1);
+  --digimap-proSiteFocus-color: #0055ff;
+  --digimap-premiumSiteColor-color: #888888;
+  --digimap-premiumSiteSecondaryColor-color: #666666;
+  --digimap-premiumSiteThirdColor-color: #333333;
+  --digimap-premiumSiteBackground-color: rgba(136, 136, 136, 0.1);
+  --digimap-premiumSiteFocus-color: #888888;
+  --digimap-premiumSiteCta-color: #111111;
+  --digimap-teamAccountColor-color: #222222;
+  --digimap-teamAccountSecondaryColor-color: #555555;
+  --digimap-teamAccountThirdColor-color: #000000;
+  --digimap-teamAccountBackground-color: #f2f2f2;
+  --digimap-teamAccountFocus-color: #111111;
+  --digimap-teamAccountCta-color: #ffffff;
+  --digimap-startupColor-color: #ff0098;
+  --digimap-startupSecondaryColor-color: #ff0098;
+  --digimap-startupThirdColor-color: #ff0098;
+  --digimap-startupBackground-color: #ffe5f5;
+  --digimap-startupFocus-color: #ee0099;
+  --digimap-startupCta-color: #ffffff;
+  --digimap-enterpriseColor-color: #222222;
+  --digimap-enterpriseSecondaryColor-color: #555555;
+  --digimap-enterpriseThirdColor-color: #000000;
+  --digimap-enterpriseBackground-color: #f2f2f2;
+  --digimap-enterpriseFocus-color: #111111;
+  --digimap-enterpriseCta-color: #ffffff;
+  --digimap-enterpriseSiteColor-color: #888888;
+  --digimap-enterpriseSiteSecondaryColor-color: #888888;
+  --digimap-enterpriseSiteThirdColor-color: #888888;
+  --digimap-enterpriseSiteBackground-color: rgba(136, 136, 136, 0.1);
+  --digimap-enterpriseSiteFocus-color: #777777;
+  --digimap-enterpriseSiteCta-color: #ffffff;
+  --digimap-sitePlan1Color-color: #00ccff;
+  --digimap-sitePlan1Focus-color: #00bbff;
+  --digimap-sitePlan1Dimmed-color: rgba(0, 204, 255, 0.1);
+  --digimap-sitePlan1Disabled-color: rgba(0, 204, 255, 0.5);
+  --digimap-sitePlan2Color-color: #0099ff;
+  --digimap-sitePlan2Focus-color: #0088ff;
+  --digimap-sitePlan2Dimmed-color: rgba(0, 153, 255, 0.1);
+  --digimap-sitePlan2Disabled-color: rgba(0, 153, 255, 0.5);
+  --digimap-sitePlan3Color-color: #0066ff;
+  --digimap-sitePlan3Focus-color: #0055ff;
+  --digimap-sitePlan3Dimmed-color: rgba(0, 102, 255, 0.1);
+  --digimap-sitePlan3Disabled-color: rgba(0, 102, 255, 0.5);
+  --digimap-teamPlan1Color-color: #6688ff;
+  --digimap-teamPlan1Focus-color: #5c7ae6;
+  --digimap-teamPlan1Dimmed-color: rgba(102, 136, 255, 0.1);
+  --digimap-teamPlan1Disabled-color: rgba(102, 136, 255, 0.5);
+  --digimap-teamPlan2Color-color: #7755ff;
+  --digimap-teamPlan2Focus-color: #6b4de6;
+  --digimap-teamPlan2Dimmed-color: rgba(119, 85, 255, 0.1);
+  --digimap-teamPlan2Disabled-color: rgba(119, 85, 255, 0.5);
+  --digimap-teamPlan3Color-color: #222222;
+  --digimap-teamPlan3Focus-color: #111111;
+  --digimap-teamPlan3Dimmed-color: rgba(34, 34, 34, 0.1);
+  --digimap-teamPlan3Disabled-color: rgba(34, 34, 34, 0.5);
+  --digimap-cmsTableText-color: #999999;
+  --digimap-cmsTableTextActive-color: #000000;
+  --digimap-cmsTableFirstColumnText-color: #555555;
+  --digimap-cmsTableHeaderText-color: #999999;
+  --digimap-cmsRichTextToolbarItemText-color: #888888;
+  --digimap-cmsRichTextToolbarItemActiveText-color: #333333;
+  --digimap-cmsRichTextToolbarItemBackground-color: #dddddd;
+  --digimap-cmsRichTextToolbarGroupBackground-color: #f3f3f3;
+  --digimap-cmsRichTextToolbarGroupBackgroundDisabled-color: rgba(
+    243,
+    243,
+    243,
+    0.5
+  );
+  --digimap-cmsRichTextDropCursor-color: #0099ff;
+  --digimap-cmsRichTextBackground-color: #f3f3f3;
+  --digimap-cmsRichTextHeading-color: #222222;
+  --digimap-cmsRichTextParagraph-color: #555555;
+  --digimap-cmsCollectionItemBackdrop-color: rgba(0, 0, 0, 0.2);
+  --digimap-cmsCodeInTextBackground-color: rgba(51, 51, 51, 0.08);
+  --digimap-cmsOverlayRowTitle-color: #333333;
+  --digimap-cmsCodeBlockSurface1-color: #fdfdfd;
+  --digimap-cmsCodeBlockSurface2-color: #eeeeee;
+  --digimap-cmsCodeBlockSurface3-color: #f3f3f3;
+  --digimap-cmsCodeBlockClickable-color: #808080;
+  --digimap-cmsCodeBlockBase-color: #323232;
+  --digimap-cmsCodeBlockDisabled-color: #c5c5c5;
+  --digimap-cmsCodeBlockHover-color: #4d4d4d;
+  --digimap-cmsCodeBlockAccent-color: #0099ff;
+  --digimap-cmsCodeBlockError-color: #ff3366;
+  --digimap-cmsCodeBlockErrorSurface-color: #ffe0e8;
+  --digimap-cmsCodeBlockPlain-color: #666666;
+  --digimap-cmsCodeBlockComment-color: #bbbbbb;
+  --digimap-cmsCodeBlockKeyword-color: #0099ff;
+  --digimap-cmsCodeBlockTag-color: #0099ff;
+  --digimap-cmsCodeBlockPunctuation-color: #bbbbbb;
+  --digimap-cmsCodeBlockDefinition-color: #ffaa00;
+  --digimap-cmsCodeBlockProperty-color: #33cccc;
+  --digimap-cmsCodeBlockStatic-color: #ff8866;
+  --digimap-cmsCodeBlockString-color: #8855ff;
+  --digimap-localizationText-color: #555555;
+  --digimap-localizationPlaceholderText-color: #999999;
+  --digimap-localizationWarningTint-color: #ffaa01;
+  --digimap-localizationEnterpriseText-color: #ffffff;
+  --digimap-localizationEnterpriseTint-color: #333333;
+  --digimap-quickActionsText-color: #666666;
+  --digimap-quickActionsTextActive-color: #222222;
+  --digimap-quickActionsSecondaryText-color: #999999;
+  --digimap-quickActionsBackgroundActive-color: #f5f5f5;
+  --digimap-quickActionsSeparatorIcon-color: #bbbbbb;
+  --digimap-quickActionsIconDefault-color: #0099ff;
+  --digimap-quickActionsIconDefaultActive-color: #ffffff;
+  --digimap-quickActionsIconBackgroundDefault-color: rgba(0, 153, 255, 0.1);
+  --digimap-quickActionsIconBackgroundDefaultActive-color: #0099ff;
+  --digimap-quickActionsIconComponentTint-color: #8855ff;
+  --digimap-quickActionsIconComponentTintActive-color: #ffffff;
+  --digimap-quickActionsIconBackgroundComponentTint-color: rgba(
+    136,
+    85,
+    255,
+    0.15
+  );
+  --digimap-quickActionsIconBackgroundComponentTintActive-color: #8855ff;
+  --digimap-quickActionsIconAssetStyleTint-color: #000000;
+  --digimap-quickActionsIconAssetStyleTintActive-color: #000000;
+  --digimap-quickActionsIconBackgroundAssetStyleTint-color: #f5f5f5;
+  --digimap-quickActionsIconBackgroundAssetStyleTintActive-color: #ffffff;
+  --digimap-historyPanelRowBackground-color: #ffffff;
+  --digimap-historyPanelRowBackgroundActive-color: #f3f3f3;
+  --digimap-historyPanelTimelineBackground-color: #eeeeee;
+  --digimap-historyPanelTimelineBackgroundActive-color: #dddddd;
+  --digimap-historyPanelTimelineDotBackground-color: #999999;
+  --digimap-historyPanelTimelineDotBackgroundActive-color: #333333;
+  --digimap-historyPanelText-color: #666666;
+  --digimap-historyPanelTextActive-color: #333333;
+  --digimap-activeGoogleSheetIcon-color: #0099ff;
+  --digimap-activeGoogleButtonText-color: #333333;
+  --digimap-loadingShieldBackground-color: #eeeeee;
+  --digimap-loadingAnimationBackground-color: #eeeeee;
+  --digimap-loadingProgressBarFill-color: #999999;
+  --digimap-fillIconHighlight-color: #ffffff;
+  --digimap-fillIconBorder-color: rgba(153, 153, 153, 0.6);
+  --digimap-fillIconBorderActive-color: #0099ff;
+  --digimap-fillIconSolidFill-color: rgba(153, 153, 153, 0.4);
+  --digimap-fillIconLinearFillInner-color: rgba(153, 153, 153, 0);
+  --digimap-fillIconLinearFillOuter-color: rgba(153, 153, 153, 0.8);
+  --digimap-fillIconRadialFillInner-color: rgba(153, 153, 153, 0);
+  --digimap-fillIconRadialFillOuter-color: rgba(153, 153, 153, 0.7);
+  --digimap-fillIconConicFillInner-color: #999999;
+  --digimap-fillIconConicFillOuter-color: #ffffff;
+  --digimap-fillIconImageFillInner-color: rgba(153, 153, 153, 0.4);
+  --digimap-fillIconImageFillOuter-color: #999999;
+  --digimap-fillIconSolidFillActive-color: rgba(0, 153, 255, 0.4);
+  --digimap-fillIconLinearFillInnerActive-color: rgba(153, 153, 153, 0);
+  --digimap-fillIconLinearFillActive-color: rgba(0, 153, 255, 0.8);
+  --digimap-fillIconRadialFillActive-color: rgba(0, 153, 255, 0.8);
+  --digimap-fillIconConicFillInnerActive-color: #0099ff;
+  --digimap-fillIconConicFillOuterActive-color: #ffffff;
+  --digimap-fillIconImageFillInnerActive-color: rgba(0, 153, 255, 0.4);
+  --digimap-fillIconImageFillOuterActive-color: #0099ff;
+  --digimap-fillPanelPresetBackground-color: #f3f3f3;
+  --digimap-publishErrorCaret-color: #999999;
+  --digimap-publishErrorTitle-color: #ff3355;
+  --digimap-buttonSelected-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1),
+    0px 1px 0px 0px rgba(0, 0, 0, 0.05);
+  --digimap-canvasTooltip-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.1);
+  --digimap-card-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  --digimap-cardActive-shadow: 0px 1px 3px 0px rgba(0, 153, 255, 0.1),
+    0px 0px 12px 0px rgba(0, 153, 255, 0.2);
+  --digimap-componentOutline-shadow: 0px 0px 0px 5px rgba(136, 85, 255, 0.1);
+  --digimap-componentOutlineSmall-shadow: 0px 0px 0px 5px
+    rgba(136, 85, 255, 0.1);
+  --digimap-dashboardNewProjectCard-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08),
+    0 1px 0 0 rgba(0, 0, 0, 0.05);
+  --digimap-gradientSliderKnobSelected-shadow: inset 0 0 0 3px white,
+    inset 0 0 0 4px #0099ff, 0 0 0 1px #0099ff;
+  --digimap-imageBorderOverlay-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --digimap-insertImage-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+  --digimap-insertMenuArtwork-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.075);
+  --digimap-modal-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.15);
+  --digimap-popover-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.05),
+    0px 5px 20px 0px rgba(0, 0, 0, 0.08);
+  --digimap-popoverDropShadow-shadow: drop-shadow(
+      0px 1px 8px rgba(0, 0, 0, 0.08)
+    )
+    drop-shadow(0px 5px 20px rgba(0, 0, 0, 0.1));
+  --digimap-settingsCard-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1),
+    0px 2px 10px 0px rgba(0, 0, 0, 0.05);
+  --digimap-sideOverlay-shadow: 0px 20px 40px rgba(0, 0, 0, 0.1);
+  --digimap-sitesPopover-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1),
+    0px 1px 4px 0px rgba(0, 0, 0, 0.02);
+  --digimap-sitesSegmentedControlItemSelected-shadow: 0px 2px 4px 0px
+    rgba(0, 0, 0, 0.15);
+  --digimap-sliderKnob-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 0.5px 0px 0px rgba(0, 0, 0, 0.1);
+  --digimap-svgScreenIcon-shadow: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+  --digimap-tintOutline-shadow: 0px 0px 0px 5px rgba(0, 153, 255, 0.1);
+  --digimap-tintOutlineSmall-shadow: 0px 0px 0px 2px rgba(0, 153, 255, 0.1);
+  --digimap-toggleTack-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1),
+    0px 2px 10px 0px rgba(0, 0, 0, 0.05);
+  --digimap-base-font-weight: 500;
+  --digimap-baseActive-font-weight: 500;
+  --digimap-heading-font-weight: 600;
+  --digimap-headingBold-font-weight: 700;
+  --digimap-headingExtraBold-font-weight: 800;
+  --toolbar-height: 48px;
+  --component-container-width: 260px;
+  --component-location-width: 300px;
+  --component-input-height: 32px;
+  --bg-toolbar: #2c2c2c;
+  --color-conditional-border: rgba(255, 255, 255, 0);
+  --color-icon-toolbar: #ffffff;
+  --color-border-toolbar: #444444;
+  --color-bg-toolbar: #2c2c2c;
+  --color-bg-toolbar-hover: #2589ff;
+  --color-context-menu: #1e1e1e;
+  --color-context-menu-hover: #2589ff;
+  --context-menu-text-color: #ffffff;
+  --color-bg: #ffffff;
+  --color-border: #e5e5e5;
+  --color-text: rgba(0, 0, 0, 0.89804);
+  --color-focus: #0dbeff;
+  --color-selected: #e5f4ff;
+  --font-size-default: 11px;
+  --font-size-header: 16px;
+  --font-size-button: 14px;
+  --color-icon-toolbar: #ffffff;
+  --input-title-height: 32px;
+  --color-title: #cbcbcb65;
+
+  * {
+    font-family: Inter, sans-serif !important;
+  }
+
+  .ant-input-number-input-focused .ant-input-number-input-selector,
+  .ant-input-number-input-selector:focus,
+  .ant-input-number-input-selector:active,
+  .ant-input-number-input-open .ant-input-number-input-selector {
+    border-color: #d9d9d9 !important;
+    box-shadow: none !important;
+  }
+
+  .right-panel {
+    input {
+      height: var(--component-input-height);
+      width: 100%;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+        Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", Segoe UI Symbol;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-width: 1px3;
+      border-style: solid;
+      border-color: var(--digimap-inputBorder-color, transparent);
+      background: var(--digimap-inputBackground-color, #f3f3f3);
+      color: var(--digimap-inputText-color, #333333);
+      font-size: var(--digimap-base-font-size, 12px);
+      font-weight: var(--digimap-base-font-weight, 400);
+      border-radius: 8px;
+      padding: 0 7px 1px;
+      height: 30px;
+      user-select: text;
+      grid-column: 2 / -1;
+
+      &:not(:focus) {
+        &:hover {
+          border-color: var(--digimap-tint-color);
+        }
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--digimap-tint-color);
+      }
+    }
+  }
+
+  .right-panel__component-wrapper {
+    margin: 0 12px;
+  }
+
+  .select-box {
+    width: 100%;
+    height: auto;
+    min-height: var(--component-input-height);
+  }
+
+  .select-box > div {
+    border-radius: 2px;
+  }
+
+  .select-box input {
+    border-radius: 2px;
+  }
+
+  .select-box input:hover {
+    outline: 0;
+  }
+
+  .select-box input:focus {
+    border-color: inherit;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .input-box {
+    margin: 0 12px;
+    height: var(--component-input-height);
+  }
+
+  .input-box input {
+    height: var(--component-input-height);
+    border-radius: 2px !important;
+  }
+
+  .input-box input:focus {
+    border-color: #0dbeff !important;
+    outline: 2px solid #0dbeff !important;
+  }
+
+  .input-box input:hover {
+    border-color: #0dbeff;
+    outline: 2px solid #0dbeff;
+  }
+
+  .input-textarea {
+    padding: 0 12px;
+  }
+
+  .input-textarea textarea {
+    border-radius: 2px !important;
+  }
+
+  .input-textarea textarea:focus {
+    border-color: #0dbeff !important;
+    outline: 2px solid #0dbeff !important;
+  }
+
+  .input-textarea textarea:hover {
+    border-color: #0dbeff;
+    outline: 2px solid #0dbeff;
+  }
+
+  .input-number-box {
+    padding: 0;
+    font-size: 12px;
+  }
+
+  .input-number-box input {
+    height: var(--component-input-height);
+  }
+
+  .input-number-box input:focus {
+    border-color: inherit;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .input-number-box input:hover {
+    border-color: inherit;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .avatar-uploader {
+    padding: 0 12px;
+  }
+
+  .avatar-uploader > .ant-upload-select {
+    width: 100% !important;
+    height: 200px !important;
+  }
+
+  .map {
+    pointer-events: all;
+  }
+
+  .map > canvas {
+    z-index: -1 !important;
+  }
+
+  .map-view-gl {
+    z-index: 6 !important;
+  }
+
+  path {
+    shape-rendering: geometricPrecision;
+  }
+}

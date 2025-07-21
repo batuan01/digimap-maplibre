@@ -1,56 +1,27 @@
-import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
-import { GeoJSONSource, LayerSpecification, Map } from "maplibre-gl";
-import { RefObject } from "react";
-import { ActionLoadData2D } from "./actionLoadData2D";
-import { isPathElement } from "../element/typeChecks";
+import { generateUUID } from "@/constants/mapConfig";
+import { AppGlobals } from "@/lib/appGlobals";
 import {
   loadFromLocalStorage,
   newDataToLocalStorage,
   saveToLocalStorage,
   updateFeatureInLocalStorage,
 } from "@/lib/localStorageUtils";
-import { AppGlobals } from "@/lib/appGlobals";
-import { generateUUID } from "@/constants/mapConfig";
+import { FeatureCollectionType, GroupFeatureType } from "@/types/featureTypes";
+import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
+import type { Position } from "geojson";
+import { LayerSpecification, Map } from "maplibre-gl";
+import { RefObject } from "react";
 import {
   DistanceElement,
   PointNearAnySegment,
 } from "../element/distanceElement";
-import type {
-  Feature,
-  FeatureCollection,
-  Geometry,
-  GeoJsonProperties,
-  Position,
-} from "geojson";
-import {
-  LonLat,
-  Path,
-  FeatureType,
-  FeatureCollectionType,
-  GroupFeatureType,
-} from "@/types/featureTypes";
 import {
   getCoordinates,
   getFeaturesBySource,
   getSourceElement,
 } from "../element/getDataElement";
-
-interface Props {
-  map: Map | null;
-  drawRef: RefObject<any>; // MaplibreTerradrawControl | null if available
-  isPathRef: RefObject<boolean>;
-}
-
-interface LoadDataProps {
-  draw: MaplibreTerradrawControl; // MaplibreTerradrawControl
-  map: Map;
-  isPathRef: RefObject<boolean>;
-}
-
-interface StartPointPathType {
-  point: Position;
-  segment: Position[];
-}
+import { isPathElement } from "../element/typeChecks";
+import { ActionLoadData2D } from "./actionLoadData2D";
 
 export class ActionDrawElement {
   static Terradraw = (
@@ -161,6 +132,9 @@ export class ActionDrawElement {
           index: newIndex,
           layer: f.properties?.layer ?? "",
           type: f.geometry?.type ?? "",
+          angle: f.properties?.angle ?? 0,
+          stroke: f.properties?.stroke ?? 4,
+          opacity: f.properties?.opacity ?? 0.4,
         },
       }));
 
