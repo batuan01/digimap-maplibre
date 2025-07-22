@@ -16,8 +16,12 @@ import { Map } from "maplibre-gl";
 import styled from "styled-components";
 import CustomToolbar from "../bottom-panel/CustomToolbar";
 import { RightPanel } from "./right-panel/RightPanel";
-import { saveToLocalStorage } from "@/lib/localStorageUtils";
+import {
+  loadFromLocalStorage,
+  saveToLocalStorage,
+} from "@/lib/localStorageUtils";
 import { AppGlobals } from "@/lib/appGlobals";
+import { deepEqual } from "@/lib/utils";
 
 const Map2DComponent = () => {
   const mapRef = useRef<Map | null>(null);
@@ -77,11 +81,15 @@ const Map2DComponent = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log("Chạy logic mỗi 5s");
-      saveToLocalStorage({
-        type: "FeatureCollection",
-        features: AppGlobals.getElements(),
-      });
+      if (
+        !deepEqual(loadFromLocalStorage()?.features, AppGlobals.getElements())
+      ) {
+        console.log("Chạy logic mỗi 5s");
+        saveToLocalStorage({
+          type: "FeatureCollection",
+          features: AppGlobals.getElements(),
+        });
+      }
     }, 5000);
 
     return () => {

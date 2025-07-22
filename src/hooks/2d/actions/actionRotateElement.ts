@@ -138,6 +138,15 @@ export class ActionRotateElement {
     const angleDelta = currentAngle - this.startAngle;
     this.startAngle = currentAngle;
 
+    const normalizedAngle = (currentAngle + 360) % 360;
+    this.polygonFeature = {
+      ...this.polygonFeature,
+      properties: {
+        ...this.polygonFeature.properties,
+        angle: normalizedAngle,
+      },
+    };
+
     this.rotateByAngle(this.map, this.polygonFeature, angleDelta);
   };
 

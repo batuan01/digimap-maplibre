@@ -3,10 +3,15 @@ import { ActionBoundingBox } from "./actionBoundingBox";
 import { LayerActions } from "./actionLayer";
 import { ActionSetData } from "./actionSetData";
 import { ActionLoadImage } from "./actionLoadImage";
-import { isImageElement } from "../element/typeChecks";
+import {
+  isImageElement,
+  isLineElement,
+  isPolygonElement,
+} from "../element/typeChecks";
 import { FeatureType } from "@/types/featureTypes";
 import { Position } from "geojson";
 import { Map, MapGeoJSONFeature } from "maplibre-gl";
+import { ActionRotateElement } from "./actionRotateElement";
 
 export class ActionHandleDragging {
   static getCornerHandles(feature: FeatureType): FeatureType[] {
@@ -115,20 +120,68 @@ export class ActionHandleDragging {
     let currentFeature: FeatureType | null = null;
 
     map.on("mousedown", (e) => {
-      if (!map.getLayer("handles-layer")) return;
       map.dragPan.disable();
 
-      const features = map.queryRenderedFeatures(e.point, {
-        layers: ["handles-layer"],
-      });
+      if (!map.getLayer("handles-layer")) return;
+      const features = map.queryRenderedFeatures(e.point);
 
-      if (features.length && features[0].properties?.type === "handle") {
-        selectedHandle = features[0];
+      const filterHandles = features.filter((f) =>
+        f.layer.id.startsWith("handles-layer")
+      );
+
+      if (!filterHandles.length) return;
+
+      const feature = filterHandles[0];
+      const type = feature.properties?.type;
+
+      if (type === "handle") {
+        selectedHandle = feature;
         isDragging = true;
         map.getCanvas().style.cursor = "grabbing";
-
-        ActionBoundingBox.clearBoundingBox(map, "selected");
       }
+
+      if (type === "midpoint") {
+        const { parentId, index } = feature.properties;
+        const allFeatures = AppGlobals.getElements();
+        const targetFeature = allFeatures.find((f) => f.id === parentId);
+        if (!targetFeature) return;
+
+        if (isPolygonElement(targetFeature)) {
+          const coords = [
+            ...(targetFeature.geometry.coordinates[0] as Position[]),
+          ];
+
+          // Lấy tọa độ midpoint từ feature
+          const midpointCoord = (feature.geometry as any).coordinates;
+
+          // Chèn vào mảng tọa độ
+          coords.splice(index, 0, midpointCoord);
+
+          targetFeature.geometry.coordinates = [coords];
+        }
+
+        if (isLineElement(targetFeature)) {
+          const coords = [
+            ...(targetFeature.geometry.coordinates as Position[]),
+          ];
+
+          // Lấy tọa độ midpoint từ feature
+          const midpointCoord = (feature.geometry as any).coordinates;
+
+          // Chèn vào mảng tọa độ
+          coords.splice(index, 0, midpointCoord);
+
+          targetFeature.geometry.coordinates = coords;
+        }
+
+        const sourceId = LayerActions.findFeatureSourceId(map, targetFeature);
+        ActionSetData.setSelectedData(map, targetFeature, sourceId);
+        AppGlobals.setDataToStore(targetFeature);
+        this.newHandlesPoint(map, targetFeature);
+      }
+
+      ActionBoundingBox.clearBoundingBox(map, "selected");
+      ActionRotateElement.destroy(map);
     });
 
     const update = () => {
@@ -273,10 +326,34 @@ export class ActionHandleDragging {
         type: "circle",
         source: "handles-source",
         paint: {
-          "circle-radius": 8,
+          "circle-radius": AppGlobals.sizeHandle ?? 8,
           "circle-color": "#ffffff", // Nền trắng
           "circle-stroke-color": "#007aff", // Viền xanh (blue iOS)
           "circle-stroke-width": 2,
+        },
+      });
+    }
+  };
+
+  static addHandlesMiddlePoint = (map: Map, handles: FeatureType[]) => {
+    if (!map.getSource("handles-source-middle")) {
+      map.addSource("handles-source-middle", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: handles,
+        },
+      });
+    }
+
+    if (!map.getLayer("handles-layer-middle")) {
+      map.addLayer({
+        id: "handles-layer-middle",
+        type: "circle",
+        source: "handles-source-middle",
+        paint: {
+          "circle-radius": AppGlobals.sizeHandle ?? 8,
+          "circle-color": "#007aff", // Nền trắng
         },
       });
     }
@@ -289,23 +366,75 @@ export class ActionHandleDragging {
     if (!handles.length) return;
     this.removeHandlesPoint(map);
     this.addHandlesPoint(map, handles);
+
+    if (isPolygonElement(feature) || isLineElement(feature)) {
+      const handlesMiddle = this.generateMidpoints(feature);
+      this.addHandlesMiddlePoint(map, handlesMiddle);
+    }
   };
 
   static removeHandlesPoint = (map: Map) => {
-    const sourceId = "handles-source";
-    const layerId = "handles-layer";
+    const sourceHandlesId = "handles-source";
+    const layerHandlesId = "handles-layer";
 
-    LayerActions.remove(map, sourceId, layerId);
+    const sourceMiddleId = "handles-source-middle";
+    const layerMiddleId = "handles-layer-middle";
+
+    LayerActions.remove(map, sourceHandlesId, layerHandlesId);
+    LayerActions.remove(map, sourceMiddleId, layerMiddleId);
   };
 
   static dragHandlesPoint = (map: Map) => {
     this.enableHandleDragging(map, (updatedFeature) => {
       const sourceId = LayerActions.findFeatureSourceId(map, updatedFeature);
+      const sourceHandlesId = "handles-source";
+      const sourceMiddleId = "handles-source-middle";
+
       // Cập nhật lại feature trong localStorage
       ActionSetData.setSelectedData(map, updatedFeature, sourceId);
 
       // Cập nhật lại handles
-      ActionSetData.setHandlesData(map, updatedFeature);
+      ActionSetData.setHandlesData(map, updatedFeature, sourceHandlesId);
+      ActionSetData.setHandlesData(map, updatedFeature, sourceMiddleId);
     });
   };
+
+  static generateMidpoints(feature: FeatureType): FeatureType[] {
+    if (!feature || !feature.geometry) return [];
+    let coordinates: any;
+    let parentId: string = feature.properties?.id;
+
+    if (isPolygonElement(feature)) {
+      coordinates = feature.geometry.coordinates[0];
+    }
+
+    if (isLineElement(feature)) {
+      coordinates = feature.geometry.coordinates;
+    }
+
+    const midpoints: FeatureType[] = [];
+
+    for (let i = 0; i < coordinates.length - 1; i++) {
+      const [lng1, lat1] = coordinates[i];
+      const [lng2, lat2] = coordinates[i + 1];
+
+      const midpoint: Position = [(lng1 + lng2) / 2, (lat1 + lat2) / 2];
+
+      midpoints.push({
+        type: "Feature",
+        id: `${parentId}-mid-${i}`,
+        geometry: {
+          type: "Point",
+          coordinates: midpoint,
+        },
+        properties: {
+          type: "midpoint",
+          parentId,
+          index: i + 1, // sẽ chèn vào vị trí này khi kéo
+        },
+      });
+    }
+
+    return midpoints;
+  }
 }

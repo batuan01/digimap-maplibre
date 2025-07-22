@@ -82,6 +82,9 @@ export default function CustomToolbar({ drawRef, mapRef, isPathRef }: Props) {
       case "rectangle":
         terraDraw.setMode("angled-rectangle");
         break;
+      case "donut":
+        terraDraw.setMode("sensor");
+        break;
       case "path":
         if (isPathRef) {
           isPathRef.current = true;
@@ -183,6 +186,13 @@ export default function CustomToolbar({ drawRef, mapRef, isPathRef }: Props) {
           >
             <Icons.Rectangle />
           </IconButton>
+          <IconButton
+            $selected={selectedControl === "donut"}
+            onClick={() => handleSelect("donut")}
+          >
+            <Icons.Donut />
+          </IconButton>
+
           <IconButton
             as="label"
             htmlFor="upload"

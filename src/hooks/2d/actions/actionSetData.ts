@@ -8,14 +8,6 @@ import {
 } from "../element/getDataElement";
 
 export class ActionSetData {
-  // static setSelectedData(map, data) {
-  //   if (data && !map.getSource(`source-${data.id}`)) return;
-  //   map.getSource(`source-${data.id}`).setData({
-  //     type: "FeatureCollection",
-  //     features: [data],
-  //   });
-  // }
-
   static setSelectedData(map: Map, data: any, sourceId?: string | null) {
     const id = sourceId ?? (data.source || `source-${data.id}`);
     const source = map.getSource(id);
@@ -54,10 +46,18 @@ export class ActionSetData {
     (source as GeoJSONSource).setData(newData);
   }
 
-  static setHandlesData(map: Map, data: FeatureType) {
-    const sourceData = getSourceElement(map, "handles-source");
+  static setHandlesData(map: Map, data: FeatureType, sourceId: string) {
+    const sourceData = getSourceElement(map, sourceId);
     if (!data || !sourceData) return;
-    const newHandles = ActionHandleDragging.getCornerHandles(data);
+    const sourceHandlesId = "handles-source";
+    const sourceMiddleId = "handles-source-middle";
+
+    let newHandles: FeatureType[] = [];
+    if (sourceId == sourceHandlesId) {
+      newHandles = ActionHandleDragging.getCornerHandles(data);
+    } else if (sourceId == sourceMiddleId) {
+      newHandles = ActionHandleDragging.generateMidpoints(data);
+    }
 
     sourceData.setData({
       type: "FeatureCollection",

@@ -102,6 +102,14 @@ export class ActionDragElement {
         if (featuresHandles.length) return;
       }
 
+      if (map.getLayer("handles-layer-middle")) {
+        const featuresHandles = map.queryRenderedFeatures(e.point, {
+          layers: ["handles-layer-middle"],
+        });
+
+        if (featuresHandles.length) return;
+      }
+
       let isInside = false;
 
       switch (geomType) {
@@ -184,7 +192,11 @@ export class ActionDragElement {
         ActionBoundingBox.drawBoundingBox(feature, map, "selected");
         AppGlobals.setDataToStore(currentFeature);
         ActionHandleDragging.newHandlesPoint(map, currentFeature);
-        ActionRotateElement.addHandle(map, currentFeature);
+
+        const polygonFeature = isImageElement(currentFeature)
+          ? ActionLoadImage.convertPoligon(currentFeature)
+          : currentFeature;
+        ActionRotateElement.addHandle(map, polygonFeature);
 
         isMove = false;
       }

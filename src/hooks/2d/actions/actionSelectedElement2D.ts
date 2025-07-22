@@ -106,7 +106,11 @@ export class ActionSelectedElement2D {
 
       if (feature) {
         setSelectedElement(feature);
-        ActionBoundingBox.drawBoundingBox(feature, map, "selected");
+        const polygonFeature = isImageElement(feature)
+          ? ActionLoadImage.convertPoligon(feature)
+          : feature;
+
+        ActionBoundingBox.drawBoundingBox(polygonFeature, map, "selected");
         map.dragPan.disable();
       } else {
         setSelectedElement(null);

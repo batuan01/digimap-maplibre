@@ -5,6 +5,7 @@ import { Map } from "maplibre-gl";
 
 export class AppGlobals {
   static elements: FeatureType[] = [];
+  static sizeHandle = 8; // Default handle size
 
   static getElements() {
     return this.elements;
@@ -12,6 +13,10 @@ export class AppGlobals {
 
   static setElements(value: FeatureType[]) {
     this.elements = value;
+  }
+
+  static setSizeHandle(value: number) {
+    this.sizeHandle = value;
   }
 
   static setDataToStore(data: FeatureType) {

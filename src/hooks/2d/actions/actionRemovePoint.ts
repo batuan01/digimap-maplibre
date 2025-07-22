@@ -41,8 +41,8 @@ export class ActionRemovePoint {
     if (!this.targetPoint || !this.parentFeature) return;
 
     if (
-      !isPathElement(this.parentFeature) ||
-      !isPolygonElement(this.parentFeature) ||
+      !isPathElement(this.parentFeature) &&
+      !isPolygonElement(this.parentFeature) &&
       !isLineElement(this.parentFeature)
     )
       return;

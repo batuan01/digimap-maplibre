@@ -11,6 +11,7 @@ import { useMapContext } from "@/contexts/useMapContext";
 import { FeatureType } from "@/types/featureTypes";
 import { ActionChangeMaterial } from "@/components/actions/basic/actionChangeMaterial";
 import { ActionChangeGeometry } from "@/components/actions/basic/actionChangeGeometry";
+import { ActionChangeViewerConfig } from "@/components/actions/basic/actionChangeViewerConfig";
 
 export const ElementPageType = {
   GLOBAL_GENERAL: "GLOBAL_GENERAL",
@@ -91,7 +92,11 @@ export const RightPanel = ({ mapContainer, mapRef }: Props) => {
     if (!mapRef.current) return <></>;
     switch (page) {
       case ElementPageType.GLOBAL_GENERAL:
-        return <></>;
+        return (
+          <>
+            <ActionChangeViewerConfig />
+          </>
+        );
 
       case ElementPageType.INFO: {
         return (
