@@ -32,112 +32,112 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
   const [viewMode, setViewMode] = useState<string>(is3D ? "3d" : "2d");
   const [zoom, setZoom] = useState<string>("");
 
-  const handleUploadImage = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): Promise<void> => {
-    const file = e.target.files?.[0];
-    const map = mapRef.current;
-    if (!file || !map) return;
+  // const handleUploadImage = async (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ): Promise<void> => {
+  //   const file = e.target.files?.[0];
+  //   const map = mapRef.current;
+  //   if (!file || !map) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const imageDataUrl = reader.result as string;
-      ActionLoadImage.add(map, imageDataUrl);
-    };
-    reader.readAsDataURL(file);
-  };
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     const imageDataUrl = reader.result as string;
+  //     ActionLoadImage.add(map, imageDataUrl);
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
-  const handleSelect = (tool: string): void => {
-    if (!drawRef) return;
-    const draw = drawRef.current;
-    const map = mapRef.current;
-    if (!draw || !map) return;
-    const terraDraw = draw.getTerraDrawInstance();
-    setSelectedControl(tool);
-    if (isPathRef) {
-      isPathRef.current = false;
-    }
-    switch (tool) {
-      case "pointer":
-        terraDraw.setMode("render");
-        setAppState({
-          activeTool: "pointer",
-        });
-        map.getCanvas().style.cursor = "default";
-        completelyDisableDragging(map);
-        break;
-      case "hand":
-        terraDraw.setMode("render");
-        setAppState({
-          activeTool: "hand",
-        });
-        map.getCanvas().style.cursor = "grab";
-        enableDraggingAgain(map);
-        break;
-      case "image":
-        terraDraw.setMode("render");
-        setAppState({
-          activeTool: "image",
-        });
-        break;
-      case "point":
-        terraDraw.setMode("point");
-        setAppState({
-          activeTool: "point",
-        });
-        break;
-      case "line":
-        terraDraw.setMode("linestring");
-        ActionLoadData2D.LoadColor(map);
-        setAppState({
-          activeTool: "line",
-        });
-        break;
-      case "polygon":
-        terraDraw.setMode("polygon");
-        ActionLoadData2D.LoadColor(map);
-        setAppState({
-          activeTool: "polygon",
-        });
-        break;
-      case "circle":
-        terraDraw.setMode("circle");
-        setAppState({
-          activeTool: "circle",
-        });
-        break;
-      case "rectangle":
-        terraDraw.setMode("angled-rectangle");
-        setAppState({
-          activeTool: "rectangle",
-        });
-        break;
-      case "donut":
-        terraDraw.setMode("sensor");
-        setAppState({
-          activeTool: "donut",
-        });
-        break;
-      case "path":
-        if (isPathRef) {
-          isPathRef.current = true;
-        }
-        map.setPaintProperty("td-linestring", "line-color", "#1c7ed6");
-        terraDraw.setMode("linestring");
-        setAppState({
-          activeTool: "path",
-        });
-        break;
-      default:
-        terraDraw.setMode("render");
-        break;
-    }
-  };
+  // const handleSelect = (tool: string): void => {
+  //   if (!drawRef) return;
+  //   const draw = drawRef.current;
+  //   const map = mapRef.current;
+  //   if (!draw || !map) return;
+  //   const terraDraw = draw.getTerraDrawInstance();
+  //   setSelectedControl(tool);
+  //   if (isPathRef) {
+  //     isPathRef.current = false;
+  //   }
+  //   switch (tool) {
+  //     case "pointer":
+  //       terraDraw.setMode("render");
+  //       setAppState({
+  //         activeTool: "pointer",
+  //       });
+  //       map.getCanvas().style.cursor = "default";
+  //       completelyDisableDragging(map);
+  //       break;
+  //     case "hand":
+  //       terraDraw.setMode("render");
+  //       setAppState({
+  //         activeTool: "hand",
+  //       });
+  //       map.getCanvas().style.cursor = "grab";
+  //       enableDraggingAgain(map);
+  //       break;
+  //     case "image":
+  //       terraDraw.setMode("render");
+  //       setAppState({
+  //         activeTool: "image",
+  //       });
+  //       break;
+  //     case "point":
+  //       terraDraw.setMode("point");
+  //       setAppState({
+  //         activeTool: "point",
+  //       });
+  //       break;
+  //     case "line":
+  //       terraDraw.setMode("linestring");
+  //       ActionLoadData2D.LoadColor(map);
+  //       setAppState({
+  //         activeTool: "line",
+  //       });
+  //       break;
+  //     case "polygon":
+  //       terraDraw.setMode("polygon");
+  //       ActionLoadData2D.LoadColor(map);
+  //       setAppState({
+  //         activeTool: "polygon",
+  //       });
+  //       break;
+  //     case "circle":
+  //       terraDraw.setMode("circle");
+  //       setAppState({
+  //         activeTool: "circle",
+  //       });
+  //       break;
+  //     case "rectangle":
+  //       terraDraw.setMode("angled-rectangle");
+  //       setAppState({
+  //         activeTool: "rectangle",
+  //       });
+  //       break;
+  //     case "donut":
+  //       terraDraw.setMode("sensor");
+  //       setAppState({
+  //         activeTool: "donut",
+  //       });
+  //       break;
+  //     case "path":
+  //       if (isPathRef) {
+  //         isPathRef.current = true;
+  //       }
+  //       map.setPaintProperty("td-linestring", "line-color", "#1c7ed6");
+  //       terraDraw.setMode("linestring");
+  //       setAppState({
+  //         activeTool: "path",
+  //       });
+  //       break;
+  //     default:
+  //       terraDraw.setMode("render");
+  //       break;
+  //   }
+  // };
 
-  const handleToggle = (mode: string): void => {
-    setViewMode(mode);
-    router.push(is3D ? "/" : "/3d");
-  };
+  // const handleToggle = (mode: string): void => {
+  //   setViewMode(mode);
+  //   router.push(is3D ? "/" : "/3d");
+  // };
 
   function getBounds(coordinates: LngLatLike): maplibregl.LngLatBounds {
     const bounds = new maplibregl.LngLatBounds();
@@ -178,7 +178,7 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
 
   return (
     <ToolbarWrapper>
-      {!is3D && (
+      {/* {!is3D && (
         <ButtonWrapper>
           <IconButton
             $selected={selectedControl === "pointer"}
@@ -251,7 +251,7 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
             <Icons.Path />
           </IconButton>
         </ButtonWrapper>
-      )}
+      )} */}
 
       <ZoomSelect onChange={handleZoomChange} value={zoom}>
         <option value="" disabled>
@@ -263,7 +263,7 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
         <option value="fit">Zoom To Fit</option>
       </ZoomSelect>
 
-      <ToggleSwitch>
+      {/* <ToggleSwitch>
         <ToggleButton
           $active={viewMode === "2d"}
           onClick={() => handleToggle("2d")}
@@ -276,7 +276,7 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
         >
           3D
         </ToggleButton>
-      </ToggleSwitch>
+      </ToggleSwitch> */}
     </ToolbarWrapper>
   );
 }

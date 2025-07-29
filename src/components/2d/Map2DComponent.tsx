@@ -116,7 +116,7 @@ const Map2DComponent = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+    <div style={{ position: "relative", height: "100vh" }}>
       <div ref={mapContainer} style={{ height: "100%" }} />
 
       <RightPanel mapContainer={mapContainer} mapRef={mapRef} />
