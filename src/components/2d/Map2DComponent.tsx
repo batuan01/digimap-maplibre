@@ -2,7 +2,6 @@
 // MapDraw.tsx
 import { useEffect, useRef } from "react";
 
-// @ts-ignore: TerraDraw is a UMD global so we import it this way
 import { useDigimapSetAppState, useUIAppState } from "@/contexts/useUIAppState";
 import { ActionBoundingBox } from "@/hooks/2d/actions/actionBoundingBox";
 import { ActionDrawElement } from "@/hooks/2d/actions/actionDrawElement";

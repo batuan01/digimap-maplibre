@@ -15,7 +15,8 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/no-explicit-any": "warn", // đổi từ error thành cảnh báo
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "no-unused-expressions": "off" // tắt lỗi khi có biểu thức không làm gì cả
+      "no-unused-expressions": "off", // tắt lỗi khi có biểu thức không làm gì cả
+      "@typescript-eslint/no-empty-object-type": "off"
     }
   }
 ];
