@@ -1,5 +1,3 @@
-"use client";
-
 import { DEFAULT_COORDINATES } from "@/constants/mapConfig";
 import { useDigimapSetAppState } from "@/contexts/useUIAppState";
 import { ActionLoadData2D } from "@/hooks/2d/actions/actionLoadData2D";
