@@ -8,7 +8,7 @@ const Wrapper = styled.div``;
 type Presets = Required<ColorPickerProps>["presets"][number];
 type DGMColorPickerProps = {
   value: string;
-  handleChange: Function;
+  handleChange: (value: any) => void;
 };
 
 // Generate presets for the color picker

@@ -16,7 +16,7 @@ import { ActionSetData } from "./actionSetData";
  * @param {maplibregl.Map}  map
  * @param {GeoJSON.Feature} feature    Polygon cần kéo
  * @param {(feat)=>void}    onUpdate   Callback (gọi setData) mỗi frame
- * @returns {Function}      cleanup()  Huỷ listener khi không cần nữa
+ * @returns {any}      cleanup()  Huỷ listener khi không cần nữa
  */
 
 type CancelHandler = { cancel: () => void };

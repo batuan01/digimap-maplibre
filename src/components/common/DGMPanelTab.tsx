@@ -61,7 +61,13 @@ export const DGMPanelTab = ({
 }: DGMPanelTabProps) => {
   return (
     <PanelTabWrapper>
-      <DGMPanelHeader actionIcons={actionIcons} label={label} guide={guide} border={border} collapse={collapse} />
+      <DGMPanelHeader
+        actionIcons={actionIcons}
+        label={label}
+        guide={guide}
+        border={border}
+        collapse={collapse}
+      />
       {collapse ? (
         collapse.isCollapse ? (
           <>
@@ -85,7 +91,7 @@ export const PanelTabInput = ({
   renderAction: any;
   children: ReactNode;
   item: any;
-  setDataName: Function;
+  setDataName: any;
 }) => {
   const [isCollapse, setIsCollapse] = useState(item.status);
 
@@ -110,7 +116,7 @@ export const PanelTabInactive = ({
   renderAction: any;
   children: ReactNode;
   item: any;
-  setDataName: Function;
+  setDataName: any;
 }) => {
   const [isCollapse, setIsCollapse] = useState(item.status);
 

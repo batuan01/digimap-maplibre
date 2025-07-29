@@ -212,7 +212,7 @@
 //   renderAction: any;
 //   isCollapse: boolean;
 //   item: any;
-//   setDataName: Function;
+//   setDataName: any;
 // }) => {
 //   const checkForOverlap = !item.status;
 
@@ -262,7 +262,7 @@
 //   renderAction: any;
 //   isCollapse: boolean;
 //   item: any;
-//   setDataName: Function;
+//   setDataName: any;
 // }) => {
 //   const setAppState = useDigimapSetAppState();
 //   const actionManager = useDigimapActionManager();
