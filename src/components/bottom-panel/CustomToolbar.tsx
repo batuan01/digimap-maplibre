@@ -21,15 +21,15 @@ interface Props {
   isPathRef?: React.RefObject<boolean>;
 }
 
-export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
-  const pathname = usePathname();
+const CustomToolbar = ({ mapRef, drawRef, isPathRef }: Props) => {
+  // const pathname = usePathname();
   const router = useRouter();
 
-  const is3D = pathname.includes("3d");
-  const setAppState = useDigimapSetAppState();
+  // const is3D = pathname.includes("3d");
+  // const setAppState = useDigimapSetAppState();
 
-  const [selectedControl, setSelectedControl] = useState<string>("pointer");
-  const [viewMode, setViewMode] = useState<string>(is3D ? "3d" : "2d");
+  // const [selectedControl, setSelectedControl] = useState<string>("pointer");
+  const [viewMode, setViewMode] = useState<string>("2d");
   const [zoom, setZoom] = useState<string>("");
 
   // const handleUploadImage = async (
@@ -134,10 +134,11 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
   //   }
   // };
 
-  // const handleToggle = (mode: string): void => {
-  //   setViewMode(mode);
-  //   router.push(is3D ? "/" : "/3d");
-  // };
+  const handleToggle = (mode: string): void => {
+    setViewMode(mode);
+    // router.push(is3D ? "/" : "/3d");
+     router.push("/");
+  };
 
   function getBounds(coordinates: LngLatLike): maplibregl.LngLatBounds {
     const bounds = new maplibregl.LngLatBounds();
@@ -263,7 +264,7 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
         <option value="fit">Zoom To Fit</option>
       </ZoomSelect>
 
-      {/* <ToggleSwitch>
+      <ToggleSwitch>
         <ToggleButton
           $active={viewMode === "2d"}
           onClick={() => handleToggle("2d")}
@@ -276,10 +277,12 @@ export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
         >
           3D
         </ToggleButton>
-      </ToggleSwitch> */}
+      </ToggleSwitch>
     </ToolbarWrapper>
   );
-}
+};
+
+export default CustomToolbar;
 
 // Container chính
 const ToolbarWrapper = styled.div`
