@@ -1,14 +1,18 @@
 "use client";
 
-import maplibregl, { LngLatLike } from "maplibre-gl";
-import { RefObject, useState } from "react";
-import styled from "styled-components";
-import { usePathname, useRouter } from "next/navigation";
-import { ActionLoadImage } from "@/hooks/2d/actions/actionLoadImage";
-import { Icons } from "@/icons/icon";
 import { DEFAULT_COORDINATES } from "@/constants/mapConfig";
+import { useDigimapSetAppState } from "@/contexts/useUIAppState";
 import { ActionLoadData2D } from "@/hooks/2d/actions/actionLoadData2D";
-import { FeatureType } from "@/types/featureTypes";
+import { ActionLoadImage } from "@/hooks/2d/actions/actionLoadImage";
+import {
+  completelyDisableDragging,
+  enableDraggingAgain,
+} from "@/hooks/2d/canvas";
+import { Icons } from "@/icons/icon";
+import maplibregl, { LngLatLike } from "maplibre-gl";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import styled from "styled-components";
 
 interface Props {
   drawRef?: React.RefObject<any>; // Consider using MaplibreTerradrawControl if available
@@ -29,6 +33,7 @@ export default function CustomToolbar({ drawRef, mapRef, isPathRef }: Props) {
   const router = useRouter();
 
   const is3D = pathname.includes("3d");
+  const setAppState = useDigimapSetAppState();
 
   const [selectedControl, setSelectedControl] = useState<string>("pointer");
   const [viewMode, setViewMode] = useState<string>(is3D ? "3d" : "2d");
@@ -61,29 +66,64 @@ export default function CustomToolbar({ drawRef, mapRef, isPathRef }: Props) {
     }
     switch (tool) {
       case "pointer":
+        terraDraw.setMode("render");
+        setAppState({
+          activeTool: "pointer",
+        });
+        map.getCanvas().style.cursor = "default";
+        completelyDisableDragging(map);
+        break;
       case "hand":
+        terraDraw.setMode("render");
+        setAppState({
+          activeTool: "hand",
+        });
+        map.getCanvas().style.cursor = "grab";
+        enableDraggingAgain(map);
+        break;
       case "image":
         terraDraw.setMode("render");
+        setAppState({
+          activeTool: "image",
+        });
         break;
       case "point":
         terraDraw.setMode("point");
+        setAppState({
+          activeTool: "point",
+        });
         break;
       case "line":
         terraDraw.setMode("linestring");
         ActionLoadData2D.LoadColor(map);
+        setAppState({
+          activeTool: "line",
+        });
         break;
       case "polygon":
         terraDraw.setMode("polygon");
         ActionLoadData2D.LoadColor(map);
+        setAppState({
+          activeTool: "polygon",
+        });
         break;
       case "circle":
         terraDraw.setMode("circle");
+        setAppState({
+          activeTool: "circle",
+        });
         break;
       case "rectangle":
         terraDraw.setMode("angled-rectangle");
+        setAppState({
+          activeTool: "rectangle",
+        });
         break;
       case "donut":
         terraDraw.setMode("sensor");
+        setAppState({
+          activeTool: "donut",
+        });
         break;
       case "path":
         if (isPathRef) {
@@ -91,6 +131,9 @@ export default function CustomToolbar({ drawRef, mapRef, isPathRef }: Props) {
         }
         map.setPaintProperty("td-linestring", "line-color", "#1c7ed6");
         terraDraw.setMode("linestring");
+        setAppState({
+          activeTool: "path",
+        });
         break;
       default:
         terraDraw.setMode("render");

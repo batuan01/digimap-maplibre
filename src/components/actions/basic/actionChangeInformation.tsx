@@ -3,7 +3,8 @@ import { DGMPanelRow } from "@/components/common/DGMPanelRow";
 import { DGMPanelTab } from "@/components/common/DGMPanelTab";
 import { DGMSelect } from "@/components/common/DGMSelect";
 import { DEFAULT_LAYER } from "@/constants/constants";
-import { useMapContext } from "@/contexts/useMapContext";
+import { useUIAppState } from "@/contexts/useUIAppState";
+import { getSelectedElement } from "@/hooks/2d/appState";
 import { AppGlobals } from "@/lib/appGlobals";
 import { Map } from "maplibre-gl";
 import { RefObject } from "react";
@@ -13,7 +14,9 @@ export const ActionChangeInformation = ({
 }: {
   mapRef: RefObject<Map | null>;
 }) => {
-  const { selectedElement } = useMapContext();
+  const appState = useUIAppState();
+  const selectedElement = getSelectedElement(appState);
+
   const options = Object.entries(DEFAULT_LAYER).map(([key, value]) => ({
     value: key,
     label: value,

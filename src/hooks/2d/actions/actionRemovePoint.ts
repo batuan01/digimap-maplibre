@@ -59,7 +59,7 @@ export class ActionRemovePoint {
     // ✅ POLYGON
     // ==========================
     if (geometryType === "Polygon") {
-      let ring = coordinates[0];
+      const ring = coordinates[0];
 
       if (ring.length <= 4) {
         // Xoá toàn bộ polygon nếu không đủ điểm

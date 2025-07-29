@@ -1,10 +1,11 @@
 import { DGMInputNumber } from "@/components/common/DGMInputNumber";
 import { DGMPanelRow } from "@/components/common/DGMPanelRow";
 import { DGMPanelTab } from "@/components/common/DGMPanelTab";
-import { useMapContext } from "@/contexts/useMapContext";
+import { useUIAppState } from "@/contexts/useUIAppState";
 import { ActionBoundingBox } from "@/hooks/2d/actions/actionBoundingBox";
 import { ActionHandleDragging } from "@/hooks/2d/actions/actionHandleDragging";
 import { ActionRotateElement } from "@/hooks/2d/actions/actionRotateElement";
+import { getSelectedElement } from "@/hooks/2d/appState";
 import { AppGlobals } from "@/lib/appGlobals";
 import { Map } from "maplibre-gl";
 import { RefObject } from "react";
@@ -14,7 +15,8 @@ export const ActionChangeBasicProperties = ({
 }: {
   mapRef: RefObject<Map | null>;
 }) => {
-  const { selectedElement } = useMapContext();
+  const appState = useUIAppState();
+  const selectedElement = getSelectedElement(appState);
 
   const handleRotate = (e: number) => {
     if (!mapRef.current || !selectedElement) return;

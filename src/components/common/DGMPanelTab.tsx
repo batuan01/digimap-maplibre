@@ -42,7 +42,7 @@ export type DGMPanelActionCollapse = {
 
 type DGMPanelTabProps = {
   actionIcons?: DGMPanelActionIcon[];
-  label?: String;
+  label?: string;
   children: ReactNode;
   onClose?: boolean;
   guide?: boolean;

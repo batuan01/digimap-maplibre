@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
 import styled from "styled-components";
 import { DirectionPanel } from "./DirectionPanel";
-import { useMapContext } from "@/contexts/useMapContext";
 import { AppGlobals } from "@/lib/appGlobals";
 import { isPathElement } from "@/hooks/2d/element/typeChecks";
 import { DistanceElement } from "@/hooks/2d/element/distanceElement";
+import { useUIAppState } from "@/contexts/useUIAppState";
+import { getSelectedElement } from "@/hooks/2d/appState";
 
 interface Props {
   mapRef: React.RefObject<any>;
@@ -16,7 +17,9 @@ interface FeatureState {
 }
 
 export const PropertiesComponent = ({ mapRef }: Props) => {
-  const { selectedElement, setSelectedElement } = useMapContext();
+   const appState = useUIAppState();
+   const selectedElement = getSelectedElement(appState);
+
   const storedData = AppGlobals.getElements();
   const [mode, setMode] = useState("properties");
   const [startFeature, setStartFeature] = useState<FeatureState>();

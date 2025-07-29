@@ -2,11 +2,12 @@ import { useContext, useEffect } from "react";
 import styled from "styled-components";
 import PathFinder from "geojson-path-finder";
 import * as turf from "@turf/turf";
-import { useMapContext } from "@/contexts/useMapContext";
 import { LayerActions } from "@/hooks/2d/actions/actionLayer";
 import { DistanceElement } from "@/hooks/2d/element/distanceElement";
 import { ActionConvertData } from "@/hooks/3d/actions/actionConvertData";
 import { ActionLoadRoute } from "@/hooks/3d/actions/actionLoadRoute";
+import { useUIAppState } from "@/contexts/useUIAppState";
+import { getSelectedElement } from "@/hooks/2d/appState";
 
 interface Props {
   mapRef: React.RefObject<any>;
@@ -21,7 +22,8 @@ export const DirectionPanel = ({
   startFeature,
   pathElement,
 }: Props) => {
-  const { selectedElement, setSelectedElement } = useMapContext();
+   const appState = useUIAppState();
+  const selectedElement = getSelectedElement(appState);
 
   const handleBack = () => {
     setMode("properties");

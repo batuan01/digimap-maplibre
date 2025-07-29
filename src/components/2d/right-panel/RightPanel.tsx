@@ -7,11 +7,12 @@ import { RefObject, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ExportMapToPDF } from "./ExportMapToPDF";
 import { Map } from "maplibre-gl";
-import { useMapContext } from "@/contexts/useMapContext";
+import { useUIAppState } from "@/contexts/useUIAppState";
 import { FeatureType } from "@/types/featureTypes";
 import { ActionChangeMaterial } from "@/components/actions/basic/actionChangeMaterial";
 import { ActionChangeGeometry } from "@/components/actions/basic/actionChangeGeometry";
 import { ActionChangeViewerConfig } from "@/components/actions/basic/actionChangeViewerConfig";
+import { getSelectedElement } from "@/hooks/2d/appState";
 
 export const ElementPageType = {
   GLOBAL_GENERAL: "GLOBAL_GENERAL",
@@ -34,7 +35,8 @@ interface Props {
 }
 
 export const RightPanel = ({ mapContainer, mapRef }: Props) => {
-  const { selectedElement } = useMapContext();
+  const appState = useUIAppState();
+  const selectedElement = getSelectedElement(appState);
 
   const [page, setPage] = useState<string>(ElementPageType.INFO);
   const [types, setTypes] = useState<string[]>([]);
@@ -61,6 +63,7 @@ export const RightPanel = ({ mapContainer, mapRef }: Props) => {
     console.log("AppGlobals.getElements()", AppGlobals.getElements());
     // console.log("types", types);
     // console.log("page", page);
+    console.log("appState", appState);
   };
 
   useEffect(() => {

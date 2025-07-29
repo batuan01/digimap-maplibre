@@ -1,22 +1,22 @@
-import { Map, Point } from "maplibre-gl";
-import { SplitPath } from "../element/splitPath";
 import { AppGlobals } from "@/lib/appGlobals";
-import { ActionSelectedElement2D } from "./actionSelectedElement2D";
-import { LayerActions } from "./actionLayer";
-import { ActionOrderLayer } from "./actionOrderLayer";
 import {
   removeFeatureFromLocalStorage,
   updateFeatureInLocalStorage,
 } from "@/lib/localStorageUtils";
-import { ActionHandleDragging } from "./actionHandleDragging";
-import { ActionSetData } from "./actionSetData";
 import { FeatureType } from "@/types/featureTypes";
-import { isPathElement } from "../element/typeChecks";
+import { Position } from "geojson";
+import { Map, Point } from "maplibre-gl";
 import {
   getFeaturesBySource,
   getSourceElement,
 } from "../element/getDataElement";
-import { Position } from "geojson";
+import { SplitPath } from "../element/splitPath";
+import { isPathElement } from "../element/typeChecks";
+import { ActionHandleDragging } from "./actionHandleDragging";
+import { LayerActions } from "./actionLayer";
+import { ActionOrderLayer } from "./actionOrderLayer";
+import { ActionSelectedElement2D } from "./actionSelectedElement2D";
+import { ActionSetData } from "./actionSetData";
 
 interface MenuOption {
   key: string;
@@ -170,7 +170,7 @@ export class ActionMenuOption {
     const sourceFeatures = getSourceElement(map, currentSourceId);
     if (!sourceFeatures) return;
 
-    let currentFeature = getFeaturesBySource(sourceFeatures)[0];
+    const currentFeature = getFeaturesBySource(sourceFeatures)[0];
     if (!currentFeature) return;
 
     currentFeature.geometry.coordinates = SplitPath.addCutPoints(

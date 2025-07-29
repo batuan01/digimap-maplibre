@@ -43,7 +43,7 @@ export class SplitPath {
 
     // @NOTE: Map contains the number of times appearing for each point
     const coordinateCount = new Map();
-    let data = updatedMultiPoints;
+    const data = updatedMultiPoints;
 
     data.forEach((segment) => {
       segment.forEach((coord) => {

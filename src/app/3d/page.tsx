@@ -1,10 +1,10 @@
-import { MapProvider } from "@/contexts/mapContext";
+import { AppProvider } from "@/contexts/mapContext";
 import MapLibre3D from "@/components/3d/Map3DComponent";
 
 export default function Map3D() {
   return (
-    <MapProvider>
+    <AppProvider>
       <MapLibre3D />
-    </MapProvider>
+    </AppProvider>
   );
 }

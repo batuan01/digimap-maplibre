@@ -3,17 +3,17 @@ import { isPathElement } from "@/hooks/2d/element/typeChecks";
 import { AppGlobals } from "@/lib/appGlobals";
 import { LngLatLike, Map, Marker } from "maplibre-gl";
 import { ActionConvertData } from "./actionConvertData";
-import { FeatureType } from "@/types/featureTypes";
+import { AppState } from "@/types/stateTypes";
 
 export class ActionSelectedElement3D {
   static getSelectedData({
     map,
-    setSelectedElement,
+    appState,
+    setAppState,
   }: {
     map: Map;
-    setSelectedElement: React.Dispatch<
-      React.SetStateAction<FeatureType | null>
-    >;
+    appState: AppState;
+    setAppState: (newState: Partial<AppState>) => void;
   }) {
     let currentMarker: Marker | null = null; // 👉 Lưu marker hiện tại
 
@@ -36,7 +36,12 @@ export class ActionSelectedElement3D {
       }
 
       if (feature) {
-        setSelectedElement(feature);
+        setAppState({
+          selectedElementIds: [
+            ...appState.selectedElementIds,
+            feature.properties?.id,
+          ],
+        });
 
         const convertCenter = ActionConvertData.convertLabel([feature]);
         const coordinate = convertCenter[0].geometry.coordinates;
@@ -47,7 +52,7 @@ export class ActionSelectedElement3D {
           .setLngLat(coordinate as LngLatLike)
           .addTo(map); // Lưu lại marker
       } else {
-        setSelectedElement(null);
+        setAppState({ selectedElementIds: [] });
       }
     });
   }

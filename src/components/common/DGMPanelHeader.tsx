@@ -117,7 +117,7 @@ type DGMDescription = {
 
 type DGMPanelHeaderProps = {
   actionIcons?: DGMPanelActionIcon[];
-  label?: String;
+  label?: string;
   guide?: boolean;
   border?: boolean;
   collapse?: DGMPanelActionCollapse;

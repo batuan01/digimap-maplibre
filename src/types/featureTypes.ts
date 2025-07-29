@@ -60,13 +60,6 @@ export interface FeatureProperties {
   [key: string]: any; // fallback for extra properties
 }
 
-// export type FeatureType = {
-//   type: "Feature";
-//   id: string;
-//   geometry: FeatureGeometry;
-//   properties: FeatureProperties;
-// };
-
 type AllowedGeometry =
   | Point
   | MultiPoint

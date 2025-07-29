@@ -3,25 +3,26 @@
 import { useEffect, useRef } from "react";
 
 // @ts-ignore: TerraDraw is a UMD global so we import it this way
-import { useMapContext } from "@/contexts/useMapContext";
+import { useDigimapSetAppState, useUIAppState } from "@/contexts/useUIAppState";
 import { ActionBoundingBox } from "@/hooks/2d/actions/actionBoundingBox";
 import { ActionDrawElement } from "@/hooks/2d/actions/actionDrawElement";
 import { ActionKeyboard } from "@/hooks/2d/actions/actionKeyboard";
 import { ActionLoadData2D } from "@/hooks/2d/actions/actionLoadData2D";
 import { ActionMenuOption } from "@/hooks/2d/actions/actionMenuOption";
 import { ActionSelectedElement2D } from "@/hooks/2d/actions/actionSelectedElement2D";
+import { getSelectedElement } from "@/hooks/2d/appState";
+import { completelyDisableDragging } from "@/hooks/2d/canvas";
 import { createMap } from "@/hooks/map";
-import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
-import { Map } from "maplibre-gl";
-import styled from "styled-components";
-import CustomToolbar from "../bottom-panel/CustomToolbar";
-import { RightPanel } from "./right-panel/RightPanel";
+import { AppGlobals } from "@/lib/appGlobals";
 import {
   loadFromLocalStorage,
   saveToLocalStorage,
 } from "@/lib/localStorageUtils";
-import { AppGlobals } from "@/lib/appGlobals";
 import { deepEqual } from "@/lib/utils";
+import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
+import { Map } from "maplibre-gl";
+import CustomToolbar from "../bottom-panel/CustomToolbar";
+import { RightPanel } from "./right-panel/RightPanel";
 
 const Map2DComponent = () => {
   const mapRef = useRef<Map | null>(null);
@@ -29,7 +30,9 @@ const Map2DComponent = () => {
   const drawRef = useRef<MaplibreTerradrawControl | null>(null);
   const isPathRef = useRef<boolean>(false);
 
-  const { selectedElement, setSelectedElement } = useMapContext();
+  const appState = useUIAppState();
+  const setAppState = useDigimapSetAppState();
+  const selectedElement = getSelectedElement(appState);
 
   useEffect(() => {
     const map = createMap({
@@ -43,19 +46,29 @@ const Map2DComponent = () => {
 
     ActionDrawElement.Terradraw(map, drawRef, isPathRef);
 
-    ActionSelectedElement2D.getSelectedElement({ map, setSelectedElement });
+    ActionSelectedElement2D.getSelectedElement({
+      map: mapRef.current,
+      getAppState: () => appStateRef.current,
+      setAppState,
+    });
     ActionSelectedElement2D.getDoubleClickSelection({
-      map,
-      setSelectedElement,
+      map: mapRef.current,
+      getAppState: () => appStateRef.current,
+      setAppState,
     });
 
     map.on("load", () => {
       ActionLoadData2D.loadDefaultData(map);
-      ActionBoundingBox.hoverBBoxSelected(mapRef.current!, selectedElement);
+      ActionBoundingBox.hoverBBoxSelected(
+        map,
+        () => appStateRef.current,
+        selectedElement
+      );
     });
 
     ActionMenuOption.initRightMouse(map);
 
+    completelyDisableDragging(map);
     return () => {
       map.remove();
     };
@@ -64,6 +77,12 @@ const Map2DComponent = () => {
   useEffect(() => {
     ActionKeyboard.keyDown(mapContainer, mapRef, selectedElement);
   }, [selectedElement]);
+
+  const appStateRef = useRef(appState);
+
+  useEffect(() => {
+    appStateRef.current = appState;
+  }, [appState]);
 
   // Hide context menu when click outside
   useEffect(() => {

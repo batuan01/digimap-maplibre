@@ -112,7 +112,7 @@ export class ActionLoadData2D {
     features: GroupFeatureType,
     map: Map,
     index: string,
-    beforeLayerId: string = ""
+    beforeLayerId: string = "td-polygon"
   ) => {
     const sourceId = `source-${index}`;
     const layerId = `layer-${index}`;

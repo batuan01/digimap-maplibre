@@ -19,8 +19,12 @@ import {
   Polygon,
   Position,
 } from "geojson";
+import { AppState } from "@/types/stateTypes";
+import { getSelectedElements } from "../appState";
 
 export class ActionSelectedElement2D {
+  static cancelDragging = { cancel: () => {} };
+
   static findFeatureAtPoint(point: Position, features: FeatureType[]) {
     const clickedPoint = turf.point(point);
 
@@ -90,14 +94,19 @@ export class ActionSelectedElement2D {
 
   static getSelectedElement({
     map,
-    setSelectedElement,
+    getAppState,
+    setAppState,
   }: {
     map: Map;
-    setSelectedElement: React.Dispatch<
-      React.SetStateAction<FeatureType | null>
-    >;
+    getAppState: () => AppState;
+    setAppState: (newState: Partial<AppState>) => void;
   }) {
     map.on("click", (e) => {
+      const appState = getAppState();
+      if (appState.activeTool === "hand") {
+        return;
+      }
+
       const clickedLngLat = [e.lngLat.lng, e.lngLat.lat];
       const storedData = AppGlobals.getElements();
       if (!storedData?.length) return;
@@ -105,19 +114,33 @@ export class ActionSelectedElement2D {
       const feature = this.findFeatureAtPoint(clickedLngLat, storedData);
 
       if (feature) {
-        setSelectedElement(feature);
+        setAppState({
+          selectedElementIds: [
+            ...appState.selectedElementIds,
+            feature.properties?.id,
+          ],
+        });
         const polygonFeature = isImageElement(feature)
           ? ActionLoadImage.convertPoligon(feature)
           : feature;
 
-        ActionBoundingBox.drawBoundingBox(polygonFeature, map, "selected");
+        const selectedElements = getSelectedElements(appState);
+
+        ActionBoundingBox.drawBoundingBoxMultiple(
+          [...selectedElements, polygonFeature],
+          map,
+          "selected"
+        );
         map.dragPan.disable();
       } else {
-        setSelectedElement(null);
+        setAppState({
+          selectedElementIds: [],
+        });
         ActionBoundingBox.clearBoundingBox(map, "selected");
         ActionHandleDragging.removeHandlesPoint(map);
         ActionRotateElement.destroy(map);
         map.dragPan.enable();
+        this.cancelDragging.cancel();
       }
 
       // selecect point handle
@@ -136,14 +159,19 @@ export class ActionSelectedElement2D {
 
   static getDoubleClickSelection({
     map,
-    setSelectedElement,
+    getAppState,
+    setAppState,
   }: {
     map: Map;
-    setSelectedElement: React.Dispatch<
-      React.SetStateAction<FeatureType | null>
-    >;
+    getAppState: () => AppState;
+    setAppState: (newState: Partial<AppState>) => void;
   }) {
     map.on("dblclick", (e) => {
+      const appState = getAppState();
+      if (appState.activeTool === "hand") {
+        return;
+      }
+
       e.preventDefault();
       map.dragPan.disable();
 
@@ -157,7 +185,14 @@ export class ActionSelectedElement2D {
       const sourceId = LayerActions.findFeatureSourceId(map, feature);
       if (!sourceId) return;
 
-      setSelectedElement(feature); // set state app
+      setAppState({
+        selectedElementIds: [
+          ...appState.selectedElementIds,
+          feature.properties?.id,
+        ],
+      });
+
+      const selectedElements = getSelectedElements(appState);
 
       // Xử lý chuẩn hóa thành Polygon để vẽ bbox và xoay
       let targetPolygon = null;
@@ -196,11 +231,18 @@ export class ActionSelectedElement2D {
           ActionBoundingBox.clearBoundingBox(map, "hover");
           ActionRotateElement.destroy(map);
         }
-        ActionBoundingBox.drawBoundingBox(targetPolygon, map, "selected");
+        ActionBoundingBox.drawBoundingBoxMultiple(
+          [...selectedElements, targetPolygon],
+          map,
+          "selected"
+        );
         ActionHandleDragging.newHandlesPoint(map, targetPolygon);
 
-        requestAnimationFrame(() => {
-          ActionDragElement.handleMoveElement({ map, feature, sourceId });
+        ActionDragElement.handleMoveElement({
+          map,
+          feature,
+          sourceId,
+          cancelDragging: this.cancelDragging,
         });
 
         ActionHandleDragging.dragHandlesPoint(map);

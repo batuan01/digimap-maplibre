@@ -1,15 +1,15 @@
 import { AppGlobals } from "@/lib/appGlobals";
+import { FeatureType } from "@/types/featureTypes";
 import * as turf from "@turf/turf";
-import { isImageElement, isLineElement } from "../element/typeChecks";
-import { ActionSetData } from "./actionSetData";
-import { ActionLoadImage } from "./actionLoadImage";
-import { ActionHandleDragging } from "./actionHandleDragging";
-import { ActionBoundingBox } from "./actionBoundingBox";
-import { ActionRotateElement } from "./actionRotateElement";
-import { LngLat, Map, MapMouseEvent } from "maplibre-gl";
-import { Area, FeatureType } from "@/types/featureTypes";
-import { getCoordinates } from "../element/getDataElement";
 import { Position } from "geojson";
+import { LngLat, Map, MapMouseEvent } from "maplibre-gl";
+import { getCoordinates } from "../element/getDataElement";
+import { isImageElement, isLineElement } from "../element/typeChecks";
+import { ActionBoundingBox } from "./actionBoundingBox";
+import { ActionHandleDragging } from "./actionHandleDragging";
+import { ActionLoadImage } from "./actionLoadImage";
+import { ActionRotateElement } from "./actionRotateElement";
+import { ActionSetData } from "./actionSetData";
 
 /**
  * Kéo polygon theo con trỏ – mượt 60 fps
@@ -19,17 +19,21 @@ import { Position } from "geojson";
  * @returns {Function}      cleanup()  Huỷ listener khi không cần nữa
  */
 
+type CancelHandler = { cancel: () => void };
+
 interface PropsMoveElement {
   map: Map | null;
   feature: FeatureType;
   sourceId: string;
+  cancelDragging: CancelHandler;
 }
 
 export class ActionDragElement {
   static dragElement(
     map: Map,
     feature: FeatureType,
-    onUpdate: (data: FeatureType) => void
+    onUpdate: (data: FeatureType) => void,
+    cancelDragging: CancelHandler
   ) {
     /* --------------------------------------------------------------------- */
     // State tạm
@@ -54,7 +58,7 @@ export class ActionDragElement {
       );
       if (!original) return feature;
 
-      let coords = getCoordinates(original.geometry);
+      const coords = getCoordinates(original.geometry);
 
       // Đảm bảo coords luôn là mảng 2 chiều
       const normalizedCoords = (
@@ -213,19 +217,33 @@ export class ActionDragElement {
     map.on("mousemove", onMouseMove);
     map.on("mouseup", onMouseUp);
 
-    return () => {
+    function disableDragging() {
       map.off("mousedown", onMouseDown);
       map.off("mousemove", onMouseMove);
       map.off("mouseup", onMouseUp);
-    };
+    }
+
+    cancelDragging.cancel = disableDragging;
   }
 
-  static handleMoveElement = ({ map, feature, sourceId }: PropsMoveElement) => {
+  static handleMoveElement = ({
+    map,
+    feature,
+    sourceId,
+    cancelDragging,
+  }: PropsMoveElement) => {
     if (!feature || !map) return;
 
     try {
-      this.dragElement(map, feature, (movedFeature) => {
-        ActionSetData.setSelectedData(map, movedFeature, sourceId);
+      requestAnimationFrame(() => {
+        this.dragElement(
+          map,
+          feature,
+          (movedFeature) => {
+            ActionSetData.setSelectedData(map, movedFeature, sourceId);
+          },
+          cancelDragging
+        );
       });
     } catch (error) {
       console.log(error);

@@ -2,7 +2,8 @@ import { DGMColorPicker } from "@/components/common/DGMColorPicker";
 import { DGMInputNumber } from "@/components/common/DGMInputNumber";
 import { DGMPanelRow } from "@/components/common/DGMPanelRow";
 import { DGMPanelTab } from "@/components/common/DGMPanelTab";
-import { useMapContext } from "@/contexts/useMapContext";
+import { useUIAppState } from "@/contexts/useUIAppState";
+import { getSelectedElement } from "@/hooks/2d/appState";
 import { AppGlobals } from "@/lib/appGlobals";
 import { AggregationColor } from "antd/es/color-picker/color";
 import { Map } from "maplibre-gl";
@@ -13,7 +14,8 @@ export const ActionChangeMaterial = ({
 }: {
   mapRef: RefObject<Map | null>;
 }) => {
-  const { selectedElement } = useMapContext();
+   const appState = useUIAppState();
+   const selectedElement = getSelectedElement(appState);
   return (
     <DGMPanelTab label={"Material"}>
       <DGMPanelRow label={"Stroke"}>

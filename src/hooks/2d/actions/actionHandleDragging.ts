@@ -12,6 +12,7 @@ import { FeatureType } from "@/types/featureTypes";
 import { Position } from "geojson";
 import { Map, MapGeoJSONFeature } from "maplibre-gl";
 import { ActionRotateElement } from "./actionRotateElement";
+import { enableDraggingAgain } from "../canvas";
 
 export class ActionHandleDragging {
   static getCornerHandles(feature: FeatureType): FeatureType[] {
@@ -46,7 +47,7 @@ export class ActionHandleDragging {
           firstCoords = coordinates as Position[];
         }
 
-        let points = [...firstCoords];
+        const points = [...firstCoords];
         const lastPoint = points.at(-1);
         if (
           points.length &&
@@ -226,7 +227,7 @@ export class ActionHandleDragging {
         case "MultiLineString": {
           if (geometryType !== "MultiLineString") return;
           const indexRaw = selectedHandle.properties.index;
-          let index = JSON.parse(indexRaw);
+          const index = JSON.parse(indexRaw);
 
           if (
             !index ||
@@ -284,12 +285,13 @@ export class ActionHandleDragging {
     });
 
     map.on("mouseup", () => {
+      map.dragPan.enable();
+      enableDraggingAgain(map);
       if (!isDragging) return;
 
       isDragging = false;
       selectedHandle = null;
       map.getCanvas().style.cursor = "";
-      map.dragPan.enable();
 
       // Cancel frame nếu còn
       if (animationFrameId) {
@@ -402,7 +404,7 @@ export class ActionHandleDragging {
   static generateMidpoints(feature: FeatureType): FeatureType[] {
     if (!feature || !feature.geometry) return [];
     let coordinates: any;
-    let parentId: string = feature.properties?.id;
+    const parentId: string = feature.properties?.id;
 
     if (isPolygonElement(feature)) {
       coordinates = feature.geometry.coordinates[0];

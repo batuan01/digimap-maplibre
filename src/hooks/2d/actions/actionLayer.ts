@@ -59,7 +59,7 @@ export class LayerActions {
 
     const id = currentSourceId.replace("source-", "");
 
-    let layerIds: string[] = [];
+    const layerIds: string[] = [];
     for (const layer of layers) {
       let idLayer = layer.id;
       if (idLayer.startsWith("layer-outline-")) {

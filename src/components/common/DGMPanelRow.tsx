@@ -58,7 +58,7 @@ const RequiredMessage = styled.span`
 `;
 
 type DGMPanelRowProps = {
-  label?: String;
+  label?: string;
   children: ReactNode;
   required?: boolean;
   isHighlight?: boolean;

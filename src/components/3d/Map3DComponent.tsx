@@ -2,7 +2,6 @@
 
 // Map3DView.tsx
 import { ZOOM_OVERVIEW } from "@/constants/mapConfig";
-import { useMapContext } from "@/contexts/useMapContext";
 import { ActionConvertData } from "@/hooks/3d/actions/actionConvertData";
 import { ActionLoadData3D } from "@/hooks/3d/actions/actionLoadData3D";
 import { ActionLoadLabel } from "@/hooks/3d/actions/actionLoadLabel";
@@ -18,6 +17,7 @@ import styled from "styled-components";
 import { ExportMapToPDF } from "../2d/right-panel/ExportMapToPDF";
 import CustomToolbar from "../bottom-panel/CustomToolbar";
 import { PropertiesComponent } from "./left-panel/PropertiesComponent";
+import { useDigimapSetAppState, useUIAppState } from "@/contexts/useUIAppState";
 
 // const booths = require("../data/booths.geojson");
 
@@ -25,7 +25,8 @@ const MapLibre3D = () => {
   const router = useRouter();
   const mapContainer = useRef(null);
   const mapRef = useRef<Map | null>(null);
-  const { selectedElement, setSelectedElement } = useMapContext();
+  const appState = useUIAppState();
+  const setAppState = useDigimapSetAppState();
 
   const storedData = loadFromLocalStorage()! as FeatureCollectionType;
   // const storedData = booths;
@@ -48,7 +49,7 @@ const MapLibre3D = () => {
 
     mapRef.current = map;
 
-    ActionSelectedElement3D.getSelectedData({ map, setSelectedElement });
+    ActionSelectedElement3D.getSelectedData({ map, appState, setAppState });
 
     map.on("load", () => {
       ActionLoadLabel.loadAllImagesLabel(map, labelFeatures);

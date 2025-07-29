@@ -1,30 +1,28 @@
-"use client"
-import React, { ReactNode, createContext, useState } from "react";
-import { FeatureType } from "@/types/featureTypes";
+// context/AppContext.tsx
+"use client";
+import React, { createContext, useState, ReactNode } from "react";
+import { AppState } from "@/types/stateTypes";
+import { getDefaultAppState } from "@/hooks/2d/appState";
 
-interface MapContextProps {
-  selectedElement: FeatureType | null;
-  setSelectedElement: React.Dispatch<React.SetStateAction<FeatureType | null>>;
-}
-interface PropsAuthContext {
+type AppContextProps = {
+  appState: AppState;
+  setAppState: React.Component<any, AppState>["setState"];
+};
+
+const AppContext = createContext<AppContextProps | null>(null);
+
+interface AppProviderProps {
   children: ReactNode;
 }
 
-const MapContext = createContext<MapContextProps | null>(null);
-
-const MapProvider: React.FC<PropsAuthContext> = ({ children }) => {
-  const [selectedElement, setSelectedElement] = useState<FeatureType | null>(
-    null
-  );
-
-  const contextValue: MapContextProps = {
-    selectedElement,
-    setSelectedElement,
-  };
+const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+  const [appState, setAppState] = useState<AppState>(getDefaultAppState() as AppState);
 
   return (
-    <MapContext.Provider value={contextValue}>{children}</MapContext.Provider>
+    <AppContext.Provider value={{ appState, setAppState }}>
+      {children}
+    </AppContext.Provider>
   );
 };
 
-export { MapProvider, MapContext };
+export { AppProvider, AppContext };

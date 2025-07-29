@@ -34,8 +34,9 @@ export class ActionRotateElement {
   static addHandle(map: Map, polygonFeature: FeatureType) {
     if (!polygonFeature || !map) return;
 
-    const bboxPolygons =
-      ActionBoundingBox.getMinimumRotatedBBox(polygonFeature);
+    const bboxPolygons = ActionBoundingBox.getMinimumRotatedBBox([
+      polygonFeature,
+    ]);
     if (!bboxPolygons) return;
     const coords = bboxPolygons.geometry.coordinates[0];
     const firstPoint = coords[0];
@@ -113,7 +114,7 @@ export class ActionRotateElement {
     if (!isOnHandle) return;
 
     this.map.getCanvas().style.cursor = "grabbing";
-    this.map.dragPan.disable();
+    // this.map.dragPan.disable();
 
     this.startAngle = this.angleTo(point);
 

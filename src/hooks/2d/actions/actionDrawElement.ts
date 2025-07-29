@@ -239,7 +239,7 @@ export class ActionDrawElement {
       if (!isPathRef.current) return;
 
       const drawFeatures = draw.getFeatures().features;
-      let geojson = AppGlobals.getElements();
+      const geojson = AppGlobals.getElements();
 
       const featuresNotAvailable = drawFeatures.filter(
         (item) => !geojson.some((bItem) => bItem.id === item.id)
