@@ -1,6 +1,6 @@
 "use client";
 // MapDraw.tsx
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useDigimapSetAppState, useUIAppState } from "@/contexts/useUIAppState";
 import { ActionBoundingBox } from "@/hooks/2d/actions/actionBoundingBox";
@@ -20,8 +20,8 @@ import {
 import { deepEqual } from "@/lib/utils";
 import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
 import { Map } from "maplibre-gl";
-import CustomToolbar from "../bottom-panel/CustomToolbar";
 import { RightPanel } from "./right-panel/RightPanel";
+import { CustomToolbar } from "../bottom-panel/CustomToolbar";
 
 const Map2DComponent = () => {
   const mapRef = useRef<Map | null>(null);
@@ -32,6 +32,7 @@ const Map2DComponent = () => {
   const appState = useUIAppState();
   const setAppState = useDigimapSetAppState();
   const selectedElement = getSelectedElement(appState);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
     const map = createMap({
@@ -68,6 +69,8 @@ const Map2DComponent = () => {
     ActionMenuOption.initRightMouse(map);
 
     completelyDisableDragging(map);
+
+    setMapReady(true);
     return () => {
       map.remove();
     };
@@ -120,7 +123,8 @@ const Map2DComponent = () => {
       <div ref={mapContainer} style={{ height: "100%" }} />
 
       <RightPanel mapContainer={mapContainer} mapRef={mapRef} />
-      <CustomToolbar mapRef={mapRef} />
+
+      {mapReady && <CustomToolbar mapRef={mapRef} />}
     </div>
   );
 };

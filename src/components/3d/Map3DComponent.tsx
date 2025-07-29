@@ -14,9 +14,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { ExportMapToPDF } from "../2d/right-panel/ExportMapToPDF";
-import CustomToolbar from "../bottom-panel/CustomToolbar";
 import { PropertiesComponent } from "./left-panel/PropertiesComponent";
 import { useDigimapSetAppState, useUIAppState } from "@/contexts/useUIAppState";
+import { CustomToolbar } from "../bottom-panel/CustomToolbar";
 
 // const booths = require("../data/booths.geojson");
 
