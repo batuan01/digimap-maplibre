@@ -22,13 +22,15 @@ interface Props {
 }
 
 const CustomToolbar = ({ mapRef, drawRef, isPathRef }: Props) => {
-  // const pathname = usePathname();
+  const pathname = usePathname();
   const router = useRouter();
 
-  // const is3D = pathname.includes("3d");
-  // const setAppState = useDigimapSetAppState();
+  console.log("pathname", pathname);
 
-  // const [selectedControl, setSelectedControl] = useState<string>("pointer");
+  // const is3D = pathname.includes("3d");
+  const setAppState = useDigimapSetAppState();
+
+  const [selectedControl, setSelectedControl] = useState<string>("pointer");
   const [viewMode, setViewMode] = useState<string>("2d");
   const [zoom, setZoom] = useState<string>("");
 
@@ -137,7 +139,7 @@ const CustomToolbar = ({ mapRef, drawRef, isPathRef }: Props) => {
   const handleToggle = (mode: string): void => {
     setViewMode(mode);
     // router.push(is3D ? "/" : "/3d");
-     router.push("/");
+    router.push("/");
   };
 
   function getBounds(coordinates: LngLatLike): maplibregl.LngLatBounds {
@@ -286,7 +288,7 @@ export default CustomToolbar;
 
 // Container chính
 const ToolbarWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
