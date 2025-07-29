@@ -197,7 +197,6 @@ const ActionButton = styled.button`
   position: relative;
   border: none;
   margin: 0;
-  -webkit-appearance: none;
   outline: none;
   text-decoration: none;
   user-select: none;
@@ -252,7 +251,6 @@ export const PublishButton = styled.button`
   position: relative;
   border: none;
   margin: 0;
-  -webkit-appearance: none;
   outline: none;
   text-decoration: none;
   user-select: none;

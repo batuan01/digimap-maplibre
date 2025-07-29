@@ -14,11 +14,17 @@ const eslintConfig = [
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "warn", // đổi từ error thành cảnh báo
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
       "no-unused-expressions": "off", // tắt lỗi khi có biểu thức không làm gì cả
-      "@typescript-eslint/no-empty-object-type": "off"
-    }
-  }
+      "@typescript-eslint/no-empty-object-type": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

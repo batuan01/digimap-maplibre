@@ -66,7 +66,8 @@ type AllowedGeometry =
   | LineString
   | MultiLineString
   | Polygon;
-export interface FeatureType extends Feature<AllowedGeometry> {}
+// export interface FeatureType extends Feature<AllowedGeometry> {}
+export type FeatureType = Feature<AllowedGeometry>;
 
 // export interface FeatureType extends Feature<Geometry> {}
 
