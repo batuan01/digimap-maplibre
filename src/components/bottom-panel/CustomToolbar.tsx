@@ -9,26 +9,19 @@ import {
   enableDraggingAgain,
 } from "@/hooks/2d/canvas";
 import { Icons } from "@/icons/icon";
-import maplibregl, { LngLatLike } from "maplibre-gl";
+import { MaplibreTerradrawControl } from "@watergis/maplibre-gl-terradraw";
+import maplibregl, { LngLatLike, Map } from "maplibre-gl";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { RefObject, useState } from "react";
 import styled from "styled-components";
 
 interface Props {
-  drawRef?: React.RefObject<any>; // Consider using MaplibreTerradrawControl if available
-  mapRef: React.RefObject<any>; // Consider using Map if available
+  mapRef: RefObject<Map | null>; // Consider using Map if available
+  drawRef?: RefObject<MaplibreTerradrawControl | null>; // Consider using MaplibreTerradrawControl if available
   isPathRef?: React.RefObject<boolean>;
 }
 
-interface IconButtonProps {
-  $selected?: boolean;
-}
-
-interface ToggleButtonProps {
-  $active?: boolean;
-}
-
-export default function CustomToolbar({ drawRef, mapRef, isPathRef }: Props) {
+export default function CustomToolbar({ mapRef, drawRef, isPathRef }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -58,7 +51,7 @@ export default function CustomToolbar({ drawRef, mapRef, isPathRef }: Props) {
     if (!drawRef) return;
     const draw = drawRef.current;
     const map = mapRef.current;
-    if (!draw) return;
+    if (!draw || !map) return;
     const terraDraw = draw.getTerraDrawInstance();
     setSelectedControl(tool);
     if (isPathRef) {
@@ -306,7 +299,7 @@ const ToolbarWrapper = styled.div`
 `;
 
 // Nút icon bo tròn
-const IconButton = styled.button<IconButtonProps>`
+const IconButton = styled.button<{ $selected: boolean }>`
   background: transparent;
   border: none;
   padding: 8px;
@@ -360,7 +353,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const ToggleButton = styled.button<ToggleButtonProps>`
+const ToggleButton = styled.button<{ $active: boolean }>`
   padding: 6px 12px;
   font-size: 14px;
   font-weight: bold;

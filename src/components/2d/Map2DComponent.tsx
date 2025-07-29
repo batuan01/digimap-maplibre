@@ -120,7 +120,7 @@ const Map2DComponent = () => {
       <div ref={mapContainer} style={{ height: "100%" }} />
 
       <RightPanel mapContainer={mapContainer} mapRef={mapRef} />
-      <CustomToolbar drawRef={drawRef} mapRef={mapRef} isPathRef={isPathRef} />
+      <CustomToolbar mapRef={mapRef} drawRef={drawRef} isPathRef={isPathRef} />
     </div>
   );
 };
