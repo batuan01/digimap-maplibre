@@ -234,19 +234,13 @@ export class ActionDragElement {
   }: PropsMoveElement) => {
     if (!feature || !map) return;
 
-    try {
-      requestAnimationFrame(() => {
-        this.dragElement(
-          map,
-          feature,
-          (movedFeature) => {
-            ActionSetData.setSelectedData(map, movedFeature, sourceId);
-          },
-          cancelDragging
-        );
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.dragElement(
+      map,
+      feature,
+      (movedFeature) => {
+        ActionSetData.setSelectedData(map, movedFeature, sourceId);
+      },
+      cancelDragging
+    );
   };
 }

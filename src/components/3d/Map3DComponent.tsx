@@ -10,7 +10,6 @@ import { createMap } from "@/hooks/map";
 import { loadFromLocalStorage } from "@/lib/localStorageUtils";
 import { FeatureCollectionType } from "@/types/featureTypes";
 import { Map } from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
